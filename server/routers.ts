@@ -178,6 +178,37 @@ export const appRouter = router({
 
         return { url: session.url, orderId };
       }),
+    verifyPayment: protectedProcedure
+      .input(z.object({ orderId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const order = await getOrderById(input.orderId);
+        if (!order) throw new TRPCError({ code: "NOT_FOUND" });
+        if (order.userId !== ctx.user.id) throw new TRPCError({ code: "FORBIDDEN" });
+        // Already paid or beyond pending, no need to verify again
+        if (order.status !== "pending") return { status: order.status };
+        // Verify with Stripe if we have a session ID
+        if (!order.stripeSessionId) return { status: order.status };
+        try {
+          const session = await stripe.checkout.sessions.retrieve(order.stripeSessionId);
+          if (session.payment_status === "paid") {
+            await updateOrderByStripeSession(order.stripeSessionId, {
+              status: "paid",
+              stripePaymentIntentId: session.payment_intent as string,
+            });
+            // Notify owner
+            const items = await getOrderItems(order.id);
+            const itemsList = items.map((i) => `${i.productName} x${i.quantity} (\u0e3f${i.priceAtTime})`).join(", ");
+            await notifyOwner({
+              title: `\u0e04\u0e33\u0e2a\u0e31\u0e48\u0e07\u0e0b\u0e37\u0e49\u0e2d\u0e43\u0e2b\u0e21\u0e48 #${order.id}`,
+              content: `\u0e25\u0e39\u0e01\u0e04\u0e49\u0e32: ${session.metadata?.customer_name || "\u0e44\u0e21\u0e48\u0e23\u0e30\u0e1a\u0e38"}\n\u0e2d\u0e35\u0e40\u0e21\u0e25: ${session.metadata?.customer_email || "\u0e44\u0e21\u0e48\u0e23\u0e30\u0e1a\u0e38"}\n\u0e2a\u0e34\u0e19\u0e04\u0e49\u0e32: ${itemsList}\n\u0e22\u0e2d\u0e14\u0e23\u0e27\u0e21: \u0e3f${order.totalAmount}\n\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e08\u0e31\u0e14\u0e2a\u0e48\u0e07: ${order.shippingAddress || "\u0e44\u0e21\u0e48\u0e23\u0e30\u0e1a\u0e38"}`,
+            }).catch(() => {});
+            return { status: "paid" };
+          }
+        } catch (err) {
+          console.error("[verifyPayment] Stripe error:", err);
+        }
+        return { status: order.status };
+      }),
   }),
 });
 

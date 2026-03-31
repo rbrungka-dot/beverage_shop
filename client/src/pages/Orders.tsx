@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams, Link, useSearch } from "wouter";
 import { ArrowLeft, Package, CheckCircle2, Clock, Truck, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +32,22 @@ function StatusBadge({ status }: { status: string }) {
 function OrderDetail({ orderId }: { orderId: number }) {
   const searchStr = useSearch();
   const isSuccess = new URLSearchParams(searchStr).get("success") === "true";
+  const utils = trpc.useUtils();
+  const verifyPayment = trpc.stripe.verifyPayment.useMutation({
+    onSuccess: () => {
+      utils.orders.getById.invalidate({ id: orderId });
+    },
+  });
   const { data: order, isLoading } = trpc.orders.getById.useQuery({ id: orderId });
+
+  // When arriving at success page, verify payment with Stripe and update order status
+  const [verified, setVerified] = React.useState(false);
+  React.useEffect(() => {
+    if (isSuccess && !verified && order?.status === "pending") {
+      setVerified(true);
+      verifyPayment.mutate({ orderId });
+    }
+  }, [isSuccess, order?.status, verified]);
 
   if (isLoading) return (
     <div className="space-y-4">

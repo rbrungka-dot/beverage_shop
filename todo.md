@@ -65,3 +65,4 @@
 - [x] แก้ไขปุ่ม "เข้าสู่ระบบ" ในหน้า /test-payment: เพิ่ม returnPath ใน getLoginUrl และ OAuth callback redirect กลับหน้าเดิม
 - [ ] แก้ไข OAuth returnPath ด้วย state parameter encoding แทน localStorage/cookie
 - [ ] แก้ไข Stripe Checkout Session ไม่เปิดหลัง login สำเร็จในหน้า /test-payment
+- [x] แก้ไขให้ Order status อัปเดตเป็น "paid" ทันทีเมื่อ user กลับมาที่ success URL (verify session จาก Stripe API)
