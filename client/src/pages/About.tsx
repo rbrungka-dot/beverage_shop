@@ -1,7 +1,7 @@
 import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Globe, MessageCircle, ArrowRight } from "lucide-react";
 
 const CACTUS_FARM_HERO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_cactus_farm_hero-QuXeEiKTEEEXoFzBj3NUUQ.webp";
-const CACTUS_FARM_FOUNDER = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_cactus_farm_closeup-ARz5axpRKEhfezoTwHhLCk.webp";
+const CACTUS_FARM_FOUNDER = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ceo_tum_farm_23f95aab.png";
 const INGREDIENTS_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ingredients_d1905de7.png";
 
 const STORY_TIMELINE = [
@@ -56,7 +56,7 @@ export default function About() {
               <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
                 <img
                   src={CACTUS_FARM_FOUNDER}
-                  alt="ผู้ก่อตั้ง Bienvica ในฟาร์มกระบองเพชร"
+                  alt="คุณตั้ม CEO Bienvica ในฟาร์มกระบองเพชร"
                   className="w-full h-full object-cover"
                 />
               </div>
