@@ -18,17 +18,35 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-background to-secondary">
+        {/* เบียงวิก้า — มุมซ้ายบน */}
+        <div className="absolute top-6 left-6 md:top-8 md:left-10 z-10">
+          <span className="font-serif text-sm md:text-base text-primary/70 italic tracking-wider">เบียงวิก้า</span>
+        </div>
         <div className="container py-16 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5">
                 Premium Science-Backed Wellness Beverage
               </span>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground leading-tight">
-                Beyond Cider™{" "}
-                <span className="text-primary italic">เบียงวิก้า</span>
-              </h1>
-              <p className="text-muted-foreground text-lg leading-relaxed max-w-md">
+              {/* ชื่อหลัก: Bienvica — Beyond Cider™ */}
+              <div className="space-y-1">
+                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight tracking-tight">
+                  Bienvica —
+                </h1>
+                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{color: 'var(--color-accent)'}}>
+                  Beyond Cider™
+                </h1>
+              </div>
+              {/* Tagline ภาษาไทย */}
+              <div className="space-y-1">
+                <p className="font-serif text-xl md:text-2xl font-semibold text-foreground leading-snug">
+                  นวัตกรรมดูแลลึกระดับเซลล์
+                </p>
+                <p className="font-serif text-xl md:text-2xl font-semibold text-foreground leading-snug">
+                  วิทยาศาสตร์ความงามที่ดื่มได้
+                </p>
+              </div>
+              <p className="text-muted-foreground text-base leading-relaxed max-w-md">
                 เครื่องดื่ม 0% แชมเปญเพื่อสุขภาพ ผสานพลังจากกุหลาบมอญ กระบองเพชร และแอปเปิ้ลไซเดอร์ ผ่านการพิสูจน์ทางวิทยาศาสตร์ระดับเซลล์
               </p>
               <p className="text-sm text-accent font-medium italic">
