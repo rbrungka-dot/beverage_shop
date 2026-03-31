@@ -44,17 +44,8 @@ export function registerOAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      // Read returnPath from cookie (set by frontend before OAuth redirect)
-      const cookieHeader = req.headers.cookie || "";
-      const returnPathMatch = cookieHeader.match(/(?:^|;\s*)oauth_return_path=([^;]*)/);
-      const returnPathRaw = returnPathMatch ? decodeURIComponent(returnPathMatch[1]) : null;
-      const safeReturnPath =
-        returnPathRaw && returnPathRaw.startsWith("/") && !returnPathRaw.startsWith("//")
-          ? returnPathRaw
-          : "/";
-      // Clear the cookie
-      res.cookie("oauth_return_path", "", { maxAge: 0, path: "/" });
-      res.redirect(302, safeReturnPath);
+      // Redirect to home — frontend handles returnPath via localStorage (see const.ts getLoginUrl)
+      res.redirect(302, "/");
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });

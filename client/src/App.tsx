@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
@@ -14,10 +14,31 @@ import Orders from "./pages/Orders";
 import About from "./pages/About";
 import Admin from "./pages/Admin";
 import TestPayment from "./pages/TestPayment";
+import { useEffect } from "react";
+import { useAuth } from "./_core/hooks/useAuth";
+
+// After OAuth login completes and user lands on "/", check localStorage for a returnPath
+// and navigate there automatically. This is safe: localStorage is same-origin only.
+function OAuthReturnRedirect() {
+  const { user, loading } = useAuth();
+  const [, navigate] = useLocation();
+
+  useEffect(() => {
+    if (loading || !user) return;
+    const returnPath = localStorage.getItem("oauth_return_path");
+    if (returnPath && returnPath !== "/" && returnPath.startsWith("/")) {
+      localStorage.removeItem("oauth_return_path");
+      navigate(returnPath);
+    }
+  }, [user, loading, navigate]);
+
+  return null;
+}
 
 function Router() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <OAuthReturnRedirect />
       <Navbar />
       <main className="flex-1">
         <Switch>

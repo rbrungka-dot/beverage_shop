@@ -131,12 +131,23 @@ export default function TestPayment() {
           {/* Checkout Button */}
           {!user ? (
             <Card className="border-dashed">
-              <CardContent className="pt-6 text-center space-y-3">
+              <CardContent className="pt-6 text-center space-y-4">
                 <ShieldCheck className="h-8 w-8 text-muted-foreground mx-auto" />
-                <p className="text-sm text-muted-foreground">ต้องเข้าสู่ระบบก่อนทดสอบการชำระเงิน</p>
-                <Button onClick={() => window.location.href = getLoginUrl("/test-payment")} className="w-full">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">ต้องเข้าสู่ระบบก่อนทดสอบการชำระเงิน</p>
+                  <p className="text-xs text-muted-foreground">กดปุ่ม "เข้าสู่ระบบ" ด้านขวาบน (มุมบนขวา) แล้วกลับมาที่หน้านี้อีกครั้ง</p>
+                </div>
+                <Button
+                  onClick={() => {
+                    window.location.href = getLoginUrl("/test-payment");
+                  }}
+                  className="w-full"
+                >
                   เข้าสู่ระบบ
                 </Button>
+                <p className="text-xs text-muted-foreground">
+                  → หลัง login จะกลับมาหน้านี้โดยอัตโนมัติ
+                </p>
               </CardContent>
             </Card>
           ) : (
