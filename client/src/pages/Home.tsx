@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const HERO_BOTTLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_hero_real_v2-2sL3KWZN2ju2MAKCpkKAtE.webp";
 const HERO_LIFESTYLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_lifestyle_real_v2-TvgyPfMY9Qw6rfcXSQd6YC.webp";
 const INGREDIENTS_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ingredients_real_v2-ahVK4XsKggF9475yzR82SH.webp";
-const TRIPLE_ACTION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_triple_real_v2-PANMxwndfT6ZXrSN5iLQcm.webp";
+const TRIPLE_ACTION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_triple_action_infographic_38140c3c.png";
 
 export default function Home() {
   const { data: featuredProducts, isLoading } = trpc.products.list.useQuery({ featuredOnly: true });
@@ -152,8 +152,8 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className="rounded-2xl overflow-hidden shadow-xl">
-              <img src={TRIPLE_ACTION_IMG} alt="Bienvica Triple Action Benefits" className="w-full h-full object-cover" />
+            <div className="rounded-2xl overflow-hidden shadow-xl bg-white">
+              <img src={TRIPLE_ACTION_IMG} alt="Bienvica Triple Action — Damask Rose, Cactus, Apple Cider" className="w-full h-auto object-contain" />
             </div>
           </div>
         </div>
