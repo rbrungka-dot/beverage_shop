@@ -10,9 +10,9 @@ export const getLoginUrl = (returnPath?: string) => {
   // Keep state as plain base64(redirectUri) — required by SDK's decodeState()
   const state = btoa(redirectUri);
 
-  // Store returnPath in sessionStorage so the app can redirect after OAuth callback
+  // Store returnPath in localStorage so it persists across the OAuth redirect
   if (returnPath && typeof window !== "undefined") {
-    sessionStorage.setItem("oauth_return_path", returnPath);
+    localStorage.setItem("oauth_return_path", returnPath);
   }
 
   const url = new URL(`${oauthPortalUrl}/app-auth`);

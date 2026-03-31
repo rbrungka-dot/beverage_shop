@@ -26,9 +26,9 @@ function OAuthReturnRedirect() {
     if (loading) return;
     if (!isAuthenticated) return;
     if (location !== "/") return;
-    const returnPath = sessionStorage.getItem("oauth_return_path");
+    const returnPath = localStorage.getItem("oauth_return_path");
     if (returnPath && returnPath !== "/") {
-      sessionStorage.removeItem("oauth_return_path");
+      localStorage.removeItem("oauth_return_path");
       navigate(returnPath);
     }
   }, [isAuthenticated, loading, location, navigate]);
