@@ -48,7 +48,7 @@ export default function TestPayment() {
 
   const handleStartCheckout = () => {
     if (!user) {
-      window.location.href = getLoginUrl();
+      window.location.href = getLoginUrl("/test-payment");
       return;
     }
     setIsRedirecting(true);
@@ -134,7 +134,7 @@ export default function TestPayment() {
               <CardContent className="pt-6 text-center space-y-3">
                 <ShieldCheck className="h-8 w-8 text-muted-foreground mx-auto" />
                 <p className="text-sm text-muted-foreground">ต้องเข้าสู่ระบบก่อนทดสอบการชำระเงิน</p>
-                <Button onClick={() => window.location.href = getLoginUrl()} className="w-full">
+                <Button onClick={() => window.location.href = getLoginUrl("/test-payment")} className="w-full">
                   เข้าสู่ระบบ
                 </Button>
               </CardContent>

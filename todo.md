@@ -60,3 +60,6 @@
 - [x] สร้างหน้า /test-payment สำหรับทดสอบการชำระเงิน Stripe
 - [x] สร้างหน้า /payment/success และ /payment/cancel (redirect ไปที่ /orders)
 - [x] ลงทะเบียน routes ใน App.tsx
+
+## Bug Fixes
+- [x] แก้ไขปุ่ม "เข้าสู่ระบบ" ในหน้า /test-payment: เพิ่ม returnPath ใน getLoginUrl และ OAuth callback redirect กลับหน้าเดิม
