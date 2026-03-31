@@ -47,3 +47,6 @@
 
 ## Brand Update
 - [x] เปลี่ยนชื่อแบรนด์จาก "The Modern Alchemist" เป็น "Bienvica" ในทุกไฟล์
+
+## Lifestyle Image Update
+- [x] สร้างภาพบรรยากาศ "คุณแพร" กับ Bienvica สไตล์ Sophisticated Elegance และอัปเดต Lifestyle Section

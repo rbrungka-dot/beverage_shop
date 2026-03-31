@@ -6,7 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const HERO_BOTTLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_hero_real_v2-2sL3KWZN2ju2MAKCpkKAtE.webp";
-const HERO_LIFESTYLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_lifestyle_real_v2-TvgyPfMY9Qw6rfcXSQd6YC.webp";
+const HERO_LIFESTYLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_lifestyle_khunprae-M6RLqrJpXieJGgJuZ7wYAD.webp";
 const INGREDIENTS_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ingredients_real_v2-ahVK4XsKggF9475yzR82SH.webp";
 const TRIPLE_ACTION_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_triple_action_infographic_38140c3c.png";
 
