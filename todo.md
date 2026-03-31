@@ -55,3 +55,8 @@
 - [x] เรียบเรียงสตอรี่ใหม่ "จากคนปลูกกระบองเพชร → ไม้ประดับ → เครื่องดื่มกินได้"
 - [x] สร้างภาพฟาร์มกระบองเพชร (wide farm shot + founder portrait) ด้วย AI
 - [x] อัปเดต About page ด้วย Hero ภาพฟาร์ม, Timeline section, สตอรี่ใหม่
+
+## Stripe Payment Test Page
+- [x] สร้างหน้า /test-payment สำหรับทดสอบการชำระเงิน Stripe
+- [x] สร้างหน้า /payment/success และ /payment/cancel (redirect ไปที่ /orders)
+- [x] ลงทะเบียน routes ใน App.tsx
