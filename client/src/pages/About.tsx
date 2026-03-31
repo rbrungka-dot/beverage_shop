@@ -13,7 +13,7 @@ export default function About() {
           </span>
           <h1 className="font-serif text-4xl md:text-5xl font-semibold text-foreground mb-6 leading-tight">
             เกี่ยวกับ{" "}
-            <span className="text-primary italic">The Modern Alchemist</span>
+            <span className="text-primary italic">Bienvica</span>
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed">
             เราเชื่อว่าเครื่องดื่มที่ดีสามารถเปลี่ยนแปลงประสบการณ์ชีวิตประจำวันให้พิเศษขึ้นได้
@@ -28,8 +28,7 @@ export default function About() {
             <div className="space-y-6">
               <h2 className="font-serif text-3xl font-semibold text-foreground">จุดเริ่มต้นของเรา</h2>
               <p className="text-muted-foreground leading-relaxed">
-                The Modern Alchemist ก่อตั้งขึ้นจากความหลงใหลในศาสตร์การสร้างสรรค์เครื่องดื่ม
-                เราเริ่มต้นจากห้องครัวเล็กๆ ด้วยความตั้งใจที่จะนำวัตถุดิบธรรมชาติมาสร้างสรรค์
+               Bienvica ก่อตั้งขึ้นจากความหลงใหลังในศาสตร์การสร้างสรรค์เครื่องดื่ม                เราเริ่มต้นจากห้องครัวเล็กๆ ด้วยความตั้งใจที่จะนำวัตถุดิบธรรมชาติมาสร้างสรรค์
                 เป็นเครื่องดื่มที่มีรสชาติเป็นเอกลักษณ์
               </p>
               <p className="text-muted-foreground leading-relaxed">

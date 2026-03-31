@@ -143,7 +143,7 @@ export default function Home() {
           <div className="max-w-2xl mx-auto text-center space-y-6">
             <h2 className="font-serif text-3xl font-semibold text-foreground">ศาสตร์แห่งการสร้างสรรค์เครื่องดื่ม</h2>
             <p className="text-muted-foreground leading-relaxed">
-              The Modern Alchemist เชื่อว่าเครื่องดื่มที่ดีคือการผสมผสานระหว่างศาสตร์และศิลป์ เราคัดสรรวัตถุดิบจากธรรมชาติ ผ่านกระบวนการผลิตที่ใส่ใจทุกรายละเอียด เพื่อมอบประสบการณ์การดื่มที่ไม่เหมือนใคร
+              Bienvica เชื่อว่าเครื่องดื่มที่ดีคือการผสมผสานระหว่างศาสตร์และศิลป์ เราคัดสรรวัตถุดิบจากธรรมชาติ ผ่านกระบวนการผลิตที่ใส่ใจทุกรายละเอียด เพื่อมอบประสบการณ์การดื่มที่ไม่เหมือนใคร
             </p>
             <Link href="/about">
               <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">อ่านเพิ่มเติม</Button>

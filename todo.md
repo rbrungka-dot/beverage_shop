@@ -44,3 +44,6 @@
 - [x] Vitest: orders router tests (auth guard, myOrders, getById, adminList)
 - [x] Vitest: auth logout test
 - [x] All 13 tests passing
+
+## Brand Update
+- [x] เปลี่ยนชื่อแบรนด์จาก "The Modern Alchemist" เป็น "Bienvica" ในทุกไฟล์

@@ -37,7 +37,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 no-underline">
             <span className="font-serif text-xl font-semibold text-foreground tracking-wide">
-              The Modern <span className="text-primary italic">Alchemist</span>
+              Bien<span className="text-primary italic">vica</span>
             </span>
           </Link>
 

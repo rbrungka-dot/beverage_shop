@@ -8,7 +8,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <h3 className="font-serif text-lg font-semibold text-foreground mb-3">
-              The Modern <span className="text-primary italic">Alchemist</span>
+              Bien<span className="text-primary italic">vica</span>
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               เครื่องดื่มคุณภาพพรีเมียม คัดสรรจากวัตถุดิบธรรมชาติ
@@ -46,7 +46,7 @@ export default function Footer() {
               ติดต่อ
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>อีเมล: hello@modernalchemist.com</li>
+              <li>อีเมล: hello@bienvica.com</li>
               <li>โทร: 02-xxx-xxxx</li>
               <li>เวลาทำการ: จันทร์–ศุกร์ 9:00–18:00</li>
             </ul>
@@ -54,7 +54,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border mt-8 pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} The Modern Alchemist. สงวนลิขสิทธิ์ทุกประการ
+          © {new Date().getFullYear()} Bienvica. สงวนลิขสิทธิ์ทุกประการ
         </div>
       </div>
     </footer>
