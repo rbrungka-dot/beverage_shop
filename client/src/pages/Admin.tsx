@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Package, ShoppingBag, Tag, BarChart3 } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, ShoppingBag, Tag, BarChart3, ChevronDown, ChevronUp, Mail, MapPin, Phone, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -233,45 +233,111 @@ function CategoriesTab() {
   );
 }
 
+const STATUS_COLORS: Record<string, string> = {
+  pending: "bg-yellow-100 text-yellow-800",
+  paid: "bg-blue-100 text-blue-800",
+  processing: "bg-purple-100 text-purple-800",
+  shipped: "bg-indigo-100 text-indigo-800",
+  delivered: "bg-green-100 text-green-800",
+  cancelled: "bg-red-100 text-red-800",
+};
+
+function OrderRow({ order, onUpdateStatus }: { order: any; onUpdateStatus: (id: number, status: string) => void }) {
+  const [expanded, setExpanded] = useState(false);
+  const { data: items } = trpc.orders.adminGetItems.useQuery({ id: order.id }, { enabled: expanded });
+
+  return (
+    <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="p-4">
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-semibold text-foreground">คำสั่งซื้อ #{order.id}</span>
+              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800"}`}>
+                {STATUS_LABELS[order.status] || order.status}
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              {new Date(order.createdAt).toLocaleString("th-TH")} · <span className="font-semibold text-foreground">฿{parseFloat(order.totalAmount).toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
+            </p>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              {order.userName && <span className="flex items-center gap-1"><User className="h-3.5 w-3.5" />{order.userName}</span>}
+              {order.userEmail && <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{order.userEmail}</span>}
+              {order.shippingName && <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{order.shippingName} — {order.shippingAddress}</span>}
+              {order.shippingPhone && <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{order.shippingPhone}</span>}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value={order.status} onValueChange={(v) => onUpdateStatus(order.id, v)}>
+              <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {Object.entries(STATUS_LABELS).map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Button variant="ghost" size="sm" onClick={() => setExpanded(!expanded)} className="text-muted-foreground">
+              {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+      </div>
+      {expanded && (
+        <div className="border-t border-border bg-muted/30 px-4 py-3">
+          {!items ? (
+            <div className="space-y-2">{Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-8 w-full" />)}</div>
+          ) : items.length === 0 ? (
+            <p className="text-sm text-muted-foreground">ไม่มีรายการสินค้า</p>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">รายการสินค้า</p>
+              {items.map((item: any) => (
+                <div key={item.id} className="flex justify-between text-sm">
+                  <span className="text-foreground">{item.productName} <span className="text-muted-foreground">× {item.quantity}</span></span>
+                  <span className="font-medium text-foreground">฿{(parseFloat(item.priceAtTime) * item.quantity).toLocaleString("th-TH")}</span>
+                </div>
+              ))}
+              {order.notes && <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border">หมายเหตุ: {order.notes}</p>}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function OrdersTab() {
   const utils = trpc.useUtils();
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const { data: orders, isLoading } = trpc.orders.adminList.useQuery();
   const updateStatus = trpc.orders.updateStatus.useMutation({
     onSuccess: () => { utils.orders.adminList.invalidate(); toast.success("อัปเดตสถานะสำเร็จ"); },
   });
 
+  const filtered = statusFilter === "all" ? orders : orders?.filter((o) => o.status === statusFilter);
+
   return (
     <div>
-      <h2 className="font-serif text-xl font-semibold text-foreground mb-6">จัดการคำสั่งซื้อ</h2>
-      {isLoading ? <div className="space-y-3">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div> : (
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <h2 className="font-serif text-xl font-semibold text-foreground">จัดการคำสั่งซื้อ</h2>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">กรอง:</span>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">ทั้งหมด ({orders?.length ?? 0})</SelectItem>
+              {Object.entries(STATUS_LABELS).map(([v, l]) => (
+                <SelectItem key={v} value={v}>{l} ({orders?.filter((o) => o.status === v).length ?? 0})</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      {isLoading ? (
+        <div className="space-y-3">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-20 w-full rounded-xl" />)}</div>
+      ) : (
         <div className="space-y-3">
-          {orders?.length === 0 && <p className="text-muted-foreground text-center py-8">ยังไม่มีคำสั่งซื้อ</p>}
-          {orders?.map((order) => (
-            <div key={order.id} className="bg-card rounded-xl border border-border p-4">
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-foreground">คำสั่งซื้อ #{order.id}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${order.status === "paid" || order.status === "delivered" ? "bg-green-100 text-green-800" : order.status === "cancelled" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"}`}>
-                      {STATUS_LABELS[order.status] || order.status}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    {new Date(order.createdAt).toLocaleString("th-TH")} · ฿{parseFloat(order.totalAmount).toLocaleString("th-TH")}
-                  </p>
-                  {order.shippingName && <p className="text-sm text-muted-foreground">ผู้รับ: {order.shippingName}</p>}
-                </div>
-                <Select
-                  value={order.status}
-                  onValueChange={(v) => updateStatus.mutate({ id: order.id, status: v as any })}
-                >
-                  <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(STATUS_LABELS).map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+          {(!filtered || filtered.length === 0) && <p className="text-muted-foreground text-center py-8">ไม่มีคำสั่งซื้อ</p>}
+          {filtered?.map((order) => (
+            <OrderRow key={order.id} order={order} onUpdateStatus={(id, status) => updateStatus.mutate({ id, status: status as any })} />
           ))}
         </div>
       )}

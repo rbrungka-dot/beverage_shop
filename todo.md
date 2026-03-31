@@ -66,3 +66,10 @@
 - [ ] แก้ไข OAuth returnPath ด้วย state parameter encoding แทน localStorage/cookie
 - [ ] แก้ไข Stripe Checkout Session ไม่เปิดหลัง login สำเร็จในหน้า /test-payment
 - [x] แก้ไขให้ Order status อัปเดตเป็น "paid" ทันทีเมื่อ user กลับมาที่ success URL (verify session จาก Stripe API)
+
+## New Features (Round 2)
+- [x] Admin Dashboard: หน้า /admin/orders แสดงรายการคำสั่งซื้อทั้งหมด
+- [x] Admin Dashboard: เปลี่ยนสถานะ Order (processing → shipped → delivered)
+- [x] Admin Dashboard: ป้องกันด้วย adminProcedure (role = admin เท่านั้น)
+- [x] Email ยืนยันคำสั่งซื้อ: ส่งอัตโนมัติหลัง verifyPayment สำเร็จ
+- [x] Email ยืนยันคำสั่งซื้อ: แสดงรายการสินค้า ราคา และที่อยู่จัดส่ง
