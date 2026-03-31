@@ -168,6 +168,7 @@ export const appRouter = router({
           success_url: `${input.origin}/orders/${orderId}?success=true`,
           cancel_url: `${input.origin}/cart?cancelled=true`,
           allow_promotion_codes: true,
+          phone_number_collection: { enabled: false },
         });
 
         const db = await getDb();

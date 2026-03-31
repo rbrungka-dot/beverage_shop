@@ -12,9 +12,9 @@ import { CreditCard, ShieldCheck, FlaskConical, Zap, CheckCircle2, AlertCircle, 
 // Test products for payment testing
 const TEST_PRODUCTS = [
   {
-    productId: 999,
-    name: "Bienvica Beyond Cider™ (ทดสอบ)",
-    price: "690.00",
+    productId: 4,
+    name: "Bienvica Gift Set — ของขวัญเพื่อสุขภาพ",
+    price: "699.00",
     quantity: 1,
     imageUrl: null,
   },

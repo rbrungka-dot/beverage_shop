@@ -114,7 +114,7 @@ export default function Navbar() {
               <Button
                 size="sm"
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
-                onClick={() => window.location.href = getLoginUrl()}
+                onClick={() => window.location.href = getLoginUrl(location !== '/' ? location : undefined)}
               >
                 เข้าสู่ระบบ
               </Button>
