@@ -38,28 +38,40 @@ class OAuthService {
     }
   }
 
-  private decodeState(state: string): string {
-    const redirectUri = atob(state);
-    return redirectUri;
+  private decodeState(state: string): { redirectUri: string; returnPath?: string } {
+    try {
+      const decoded = atob(state);
+      // Try parsing as JSON first (new format with returnPath)
+      try {
+        const parsed = JSON.parse(decoded);
+        if (parsed && typeof parsed.redirectUri === "string") {
+          return { redirectUri: parsed.redirectUri, returnPath: parsed.returnPath };
+        }
+      } catch {
+        // Not JSON — old format, just a plain redirectUri string
+      }
+      return { redirectUri: decoded };
+    } catch {
+      return { redirectUri: atob(state) };
+    }
   }
 
   async getTokenByCode(
     code: string,
     state: string
-  ): Promise<ExchangeTokenResponse> {
+  ): Promise<ExchangeTokenResponse & { returnPath?: string }> {
+    const { redirectUri, returnPath } = this.decodeState(state);
     const payload: ExchangeTokenRequest = {
       clientId: ENV.appId,
       grantType: "authorization_code",
       code,
-      redirectUri: this.decodeState(state),
+      redirectUri,
     };
-
     const { data } = await this.client.post<ExchangeTokenResponse>(
       EXCHANGE_TOKEN_PATH,
       payload
     );
-
-    return data;
+    return { ...data, returnPath };
   }
 
   async getUserInfoByToken(
@@ -121,7 +133,7 @@ class SDKServer {
   async exchangeCodeForToken(
     code: string,
     state: string
-  ): Promise<ExchangeTokenResponse> {
+  ): Promise<ExchangeTokenResponse & { returnPath?: string }> {
     return this.oauthService.getTokenByCode(code, state);
   }
 

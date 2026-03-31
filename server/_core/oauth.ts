@@ -21,6 +21,7 @@ export function registerOAuthRoutes(app: Express) {
 
     try {
       const tokenResponse = await sdk.exchangeCodeForToken(code, state);
+      const returnPath = tokenResponse.returnPath;
       const userInfo = await sdk.getUserInfo(tokenResponse.accessToken);
 
       if (!userInfo.openId) {
@@ -44,8 +45,9 @@ export function registerOAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      // Redirect to home — frontend handles returnPath via localStorage (see const.ts getLoginUrl)
-      res.redirect(302, "/");
+      // Redirect to returnPath if present (encoded in state), otherwise home
+      const redirectTo = returnPath && returnPath.startsWith("/") ? returnPath : "/";
+      res.redirect(302, redirectTo);
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });

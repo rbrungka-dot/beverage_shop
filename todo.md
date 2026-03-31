@@ -63,3 +63,4 @@
 
 ## Bug Fixes
 - [x] แก้ไขปุ่ม "เข้าสู่ระบบ" ในหน้า /test-payment: เพิ่ม returnPath ใน getLoginUrl และ OAuth callback redirect กลับหน้าเดิม
+- [ ] แก้ไข OAuth returnPath ด้วย state parameter encoding แทน localStorage/cookie
