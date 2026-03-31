@@ -1,43 +1,98 @@
-import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Globe, MessageCircle } from "lucide-react";
+import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Globe, MessageCircle, ArrowRight } from "lucide-react";
 
-const LIFESTYLE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_hero_lifestyle_3b3efb7e.png";
+const CACTUS_FARM_HERO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_cactus_farm_hero-QuXeEiKTEEEXoFzBj3NUUQ.webp";
+const CACTUS_FARM_FOUNDER = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_cactus_farm_closeup-ARz5axpRKEhfezoTwHhLCk.webp";
 const INGREDIENTS_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ingredients_d1905de7.png";
+
+const STORY_TIMELINE = [
+  {
+    year: "16 ปีก่อน",
+    title: "จุดเริ่มต้นจากไม้ประดับ",
+    desc: "ทุกอย่างเริ่มต้นจากความหลงใหลในกระบองเพชร — พืชที่แข็งแกร่ง สวยงาม และซ่อนคุณค่าไว้มากกว่าที่ตาเห็น ผู้ก่อตั้งของเราเริ่มปลูกกระบองเพชรเป็นไม้ประดับ ดูแลด้วยมือตัวเอง และค่อยๆ สะสมความรู้เกี่ยวกับพืชชนิดนี้อย่างลึกซึ้ง",
+  },
+  {
+    year: "ต่อมา",
+    title: "จากไม้ประดับสู่วัตถุดิบอาหาร",
+    desc: "เมื่อฟาร์มกระบองเพชรขยายใหญ่ขึ้น คำถามหนึ่งก็ผุดขึ้นมา — \"ถ้ากระบองเพชรกินได้ และมีสารอาหารที่ดีต่อร่างกาย ทำไมเราถึงไม่ทำให้มันกลายเป็นมากกว่าแค่ไม้ประดับ?\" จากนั้นการศึกษาด้าน Food Science จึงเริ่มต้นขึ้น",
+  },
+  {
+    year: "วันนี้",
+    title: "Bienvica — เครื่องดื่มที่กินได้จากฟาร์ม",
+    desc: "ด้วยประสบการณ์กว่า 16 ปีในการปลูกกระบองเพชร ผสานกับความรู้ด้านวิทยาศาสตร์การอาหาร เราได้สร้าง Bienvica Beyond Cider™ — เครื่องดื่มที่นำ p-Coumaric acid จากกระบองเพชรมาเป็นหัวใจสำคัญ ร่วมกับ Damask Rose และ Apple Cider Vinegar เพื่อดูแลสุขภาพระดับเซลล์",
+  },
+];
 
 export default function About() {
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-secondary via-background to-secondary">
-        <div className="container max-w-3xl text-center">
-          <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5 mb-6">
+      {/* Hero with Farm Image */}
+      <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
+        <img
+          src={CACTUS_FARM_HERO}
+          alt="ฟาร์มกระบองเพชร Bienvica"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-16 text-center px-4">
+          <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/60 rounded-full px-4 py-1.5 mb-4 bg-black/20 backdrop-blur-sm">
             Our Story
           </span>
-          <h1 className="font-serif text-4xl md:text-5xl font-semibold text-foreground mb-6 leading-tight">
-            เกี่ยวกับ{" "}
-            <span className="text-primary italic">Bienvica</span>
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold text-white mb-3 leading-tight drop-shadow-lg">
+            จากฟาร์มกระบองเพชร<br />
+            <span className="text-accent italic">สู่เครื่องดื่มดูแลสุขภาพ</span>
           </h1>
-          <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl mx-auto">
-            สตาร์ทอัพด้าน Food &amp; Wellness Technology ที่มุ่งสร้างผลิตภัณฑ์เพื่อสุขภาพที่มีงานวิจัยรองรับ ผสานความงดงามของธรรมชาติกับนวัตกรรมทางวิทยาศาสตร์
+          <p className="text-white/80 text-lg max-w-xl drop-shadow">
+            16 ปีแห่งความรัก ความอดทน และความเชื่อว่ากระบองเพชรมีคุณค่ามากกว่าที่ตาเห็น
           </p>
         </div>
       </section>
 
-      {/* Brand Story */}
-      <section className="py-16">
+      {/* Origin Story with Founder Photo */}
+      <section className="py-20">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="font-serif text-3xl font-semibold text-foreground">จุดเริ่มต้นของเรา</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Bienvica เกิดจากความเชื่อว่าความสุขที่แท้จริงนั้นแฝงอยู่ในช่วงเวลาเรียบง่ายของชีวิต — ในมื้ออาหารอบอุ่นกับครอบครัว ในรอยยิ้มและน้ำใจที่เพื่อนมอบให้กัน และในการดูแลสุขภาพของตัวเราเองและคนที่เรารัก
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+            {/* Founder Photo */}
+            <div className="relative">
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  src={CACTUS_FARM_FOUNDER}
+                  alt="ผู้ก่อตั้ง Bienvica ในฟาร์มกระบองเพชร"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* Floating badge */}
+              <div className="absolute -bottom-4 -right-4 bg-card border border-border rounded-xl px-5 py-3 shadow-xl">
+                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">ประสบการณ์</p>
+                <p className="font-serif text-2xl font-bold text-foreground">16 ปี</p>
+                <p className="text-xs text-muted-foreground">การปลูกกระบองเพชร</p>
+              </div>
+            </div>
+
+            {/* Story Text */}
+            <div className="space-y-8">
+              <div>
+                <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5 mb-4">
+                  จุดเริ่มต้นของเรา
+                </span>
+                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground leading-tight mb-4">
+                  ทุกอย่างเริ่มจาก<br />
+                  <span className="text-primary italic">คนปลูกกระบองเพชร</span>
+                </h2>
+              </div>
+
+              <p className="text-muted-foreground leading-relaxed text-base">
+                ก่อนที่จะมี Bienvica มีฟาร์มกระบองเพชรเล็กๆ ในสกลนคร ที่เริ่มต้นจากความหลงใหลในพืชที่แข็งแกร่งและงดงามชนิดนี้ ผู้ก่อตั้งของเราดูแลกระบองเพชรด้วยมือตัวเองมานานกว่า 16 ปี เรียนรู้ทุกรายละเอียดของพืชชนิดนี้อย่างลึกซึ้ง
               </p>
-              <p className="text-muted-foreground leading-relaxed">
-                ด้วยความเชื่อนี้ เราจึงสร้างสรรค์เครื่องดื่มที่ไม่เพียงดีต่อสุขภาพ แต่ยังเป็นส่วนหนึ่งของช่วงเวลาแห่งความสุขในชีวิตประจำวัน เพราะเราเข้าใจว่าสุขภาพที่ดีคือรากฐานของชีวิตที่มีความสุข
+
+              <p className="text-muted-foreground leading-relaxed text-base">
+                จนวันหนึ่ง คำถามง่ายๆ ก็เปลี่ยนทุกอย่าง — <em className="text-foreground font-medium">"ถ้ากระบองเพชรกินได้ และมีสารอาหารที่ดีต่อร่างกาย ทำไมเราถึงไม่ทำให้มันกลายเป็นมากกว่าแค่ไม้ประดับ?"</em>
               </p>
-              <p className="text-muted-foreground leading-relaxed">
-                ผลิตภัณฑ์ของเราถูกออกแบบขวดสไตล์แชมเปญ เพื่อบอกว่าระหว่างที่เราดูแลคนอื่น เราก็ดูแลตัวเองและมีความสุขเล็กๆ ได้พร้อมกัน
+
+              <p className="text-muted-foreground leading-relaxed text-base">
+                นั่นคือจุดเริ่มต้นของการศึกษาด้าน Food Science อย่างจริงจัง และในที่สุด Bienvica Beyond Cider™ ก็ถือกำเนิดขึ้น — เครื่องดื่มที่นำ p-Coumaric acid จากกระบองเพชรมาเป็นหัวใจสำคัญ ผสานกับ Damask Rose และ Apple Cider Vinegar เพื่อดูแลสุขภาพระดับเซลล์
               </p>
-              <div className="flex flex-wrap gap-3">
+
+              <div className="flex flex-wrap gap-3 pt-2">
                 <div className="bg-secondary rounded-lg px-4 py-2 text-sm">
                   <span className="font-semibold text-foreground">2,000 ขวด/ปี</span>
                   <span className="text-muted-foreground ml-1">ยอดขาย</span>
@@ -52,15 +107,49 @@ export default function About() {
                 </div>
               </div>
             </div>
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-              <img src={LIFESTYLE_IMG} alt="Bienvica Lifestyle" className="w-full h-full object-cover" />
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline — The Journey */}
+      <section className="py-16 bg-secondary/40">
+        <div className="container max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="font-serif text-3xl font-semibold text-foreground mb-2">เส้นทางของเรา</h2>
+            <p className="text-muted-foreground">จากไม้ประดับสู่นวัตกรรมเครื่องดื่มเพื่อสุขภาพ</p>
+          </div>
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2 hidden md:block" />
+            <div className="space-y-10">
+              {STORY_TIMELINE.map((item, idx) => (
+                <div
+                  key={idx}
+                  className={`relative flex flex-col md:flex-row gap-6 md:gap-10 items-start ${
+                    idx % 2 === 1 ? "md:flex-row-reverse" : ""
+                  }`}
+                >
+                  {/* Content */}
+                  <div className="flex-1 bg-card border border-border rounded-2xl p-6 shadow-sm">
+                    <span className="text-xs font-medium text-accent uppercase tracking-widest mb-2 block">{item.year}</span>
+                    <h3 className="font-serif text-xl font-semibold text-foreground mb-3">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                  </div>
+                  {/* Center dot */}
+                  <div className="hidden md:flex w-12 h-12 rounded-full bg-primary/10 border-2 border-primary/30 items-center justify-center flex-shrink-0 z-10">
+                    <ArrowRight className="h-5 w-5 text-primary" />
+                  </div>
+                  {/* Spacer for alternating layout */}
+                  <div className="flex-1 hidden md:block" />
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Core Values */}
-      <section className="py-16 bg-secondary/50">
+      <section className="py-16">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="font-serif text-3xl font-semibold text-foreground mb-2">ค่านิยมหลักของเรา</h2>
@@ -86,7 +175,7 @@ export default function About() {
       </section>
 
       {/* Science Section */}
-      <section className="py-16">
+      <section className="py-16 bg-secondary/40">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="rounded-2xl overflow-hidden shadow-xl">
@@ -120,7 +209,7 @@ export default function About() {
       </section>
 
       {/* Partners */}
-      <section className="py-16 bg-secondary/50">
+      <section className="py-16">
         <div className="container max-w-3xl text-center">
           <h2 className="font-serif text-3xl font-semibold text-foreground mb-4">พันธมิตรของเรา</h2>
           <p className="text-muted-foreground mb-8 leading-relaxed">
@@ -136,7 +225,7 @@ export default function About() {
       </section>
 
       {/* Contact */}
-      <section className="py-16">
+      <section className="py-16 bg-secondary/40">
         <div className="container max-w-2xl text-center">
           <h2 className="font-serif text-3xl font-semibold text-foreground mb-4">ติดต่อเรา</h2>
           <p className="text-muted-foreground mb-8">
@@ -144,12 +233,12 @@ export default function About() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             {[
-              { icon: Phone, label: "โทรศัพท์", value: "+666-4654-0592" },
+              { icon: Phone, label: "โทรศัพท์", value: "+66 64 654 0592" },
               { icon: Mail, label: "อีเมล", value: "thanakrittum@gmail.com" },
               { icon: Globe, label: "เว็บไซต์", value: "www.bienvica.com" },
               { icon: MessageCircle, label: "Line", value: "@bienvica" },
             ].map((c) => (
-              <div key={c.label} className="bg-secondary rounded-xl p-4 flex items-center gap-3 text-left">
+              <div key={c.label} className="bg-card rounded-xl p-4 flex items-center gap-3 text-left border border-border">
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <c.icon className="h-4 w-4 text-primary" />
                 </div>

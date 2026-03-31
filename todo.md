@@ -50,3 +50,8 @@
 
 ## Lifestyle Image Update
 - [x] สร้างภาพบรรยากาศ "คุณแพร" กับ Bienvica สไตล์ Sophisticated Elegance และอัปเดต Lifestyle Section
+
+## About Page Story Update
+- [x] เรียบเรียงสตอรี่ใหม่ "จากคนปลูกกระบองเพชร → ไม้ประดับ → เครื่องดื่มกินได้"
+- [x] สร้างภาพฟาร์มกระบองเพชร (wide farm shot + founder portrait) ด้วย AI
+- [x] อัปเดต About page ด้วย Hero ภาพฟาร์ม, Timeline section, สตอรี่ใหม่
