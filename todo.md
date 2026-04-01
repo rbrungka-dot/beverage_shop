@@ -80,3 +80,7 @@
 - [x] เพิ่ม link "รับจ้างผลิต" ใน Navbar
 - [x] เพิ่ม section รับจ้างผลิตใน Landing page (Home.tsx)
 - [x] แจ้ง owner เมื่อมี inquiry ใหม่ผ่าน notifyOwner
+
+## Bug Fixes (Round 3)
+- [x] ลบ OEM/รับจ้างผลิต section ออกจากหน้าแรก (Home.tsx)
+- [x] เพิ่ม OEM section ในหน้า About.tsx ก่อน section ติดต่อเรา

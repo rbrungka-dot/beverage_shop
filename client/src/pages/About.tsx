@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Globe, MessageCircle, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "wouter";
+import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Globe, MessageCircle, ArrowRight, ChevronLeft, ChevronRight, Factory } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const CACTUS_FARM_HERO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_cactus_farm_hero-QuXeEiKTEEEXoFzBj3NUUQ.webp";
 const CACTUS_FARM_FOUNDER = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ceo_tum_farm_23f95aab.png";
@@ -337,6 +339,54 @@ export default function About() {
             <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
               พันธมิตรสำคัญในการรับซื้อกุหลาบมอญคุณภาพสูง ทำให้เรามั่นใจว่าวัตถุดิบในผลิตภัณฑ์ของเราไม่เพียงแต่สดใหม่และเป็นธรรมชาติ แต่ยังช่วยส่งเสริมรายได้ที่ยั่งยืนให้กับเกษตรกรท้องถิ่นอีกด้วย
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* OEM/Custom Manufacturing */}
+      <section className="py-16 bg-[#1a1a1a]">
+        <div className="container max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm text-[#c8a96e] font-medium mb-5">
+                <Factory className="h-3.5 w-3.5" />
+                OEM / ODM Manufacturing
+              </div>
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+                รับจ้างผลิต<br />
+                <span className="text-[#c8a96e]">เครื่องดื่มแบรนด์ของคุณ</span>
+              </h2>
+              <p className="text-white/60 mb-6 leading-relaxed">
+                ต้องการสร้างแบรนด์เครื่องดื่มของตัวเอง? เราพร้อมพัฒนาสูตร ผลิต
+                และออกแบบบรรจุภัณฑ์ให้ครบวงจร ด้วยโรงงานมาตรฐาน GMP
+                และทีม R&amp;D ที่มีประสบการณ์
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/custom">
+                  <Button className="bg-[#c8a96e] hover:bg-[#b8995e] text-white px-6">
+                    ขอใบเสนอราคา
+                  </Button>
+                </Link>
+                <Link href="/custom">
+                  <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 bg-transparent px-6">
+                    ดูรายละเอียด
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { num: "GMP", label: "มาตรฐานโรงงาน" },
+                { num: "R&D", label: "ทีมพัฒนาสูตร" },
+                { num: "MOQ", label: "ปริมาณขั้นต่ำต่ำ" },
+                { num: "360°", label: "บริการครบวงจร" },
+              ].map(({ num, label }) => (
+                <div key={label} className="bg-white/5 border border-white/10 rounded-xl p-5 text-center">
+                  <div className="text-2xl font-bold text-[#c8a96e] mb-1">{num}</div>
+                  <div className="text-sm text-white/60">{label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
