@@ -13,6 +13,8 @@ import {
   getCartItems, upsertCartItem, updateCartItemQuantity, removeCartItem, clearCart,
   createOrder, getOrdersByUser, getAllOrders, getOrderById, getOrderItems, updateOrderStatus,
   updateOrderByStripeSession, getOrderByStripeSession, getDb,
+  getPublishedArticles, getAllArticles, getArticleBySlug, getArticleById,
+  createArticle, updateArticle, deleteArticle,
 } from "./db";
 import { orders as ordersTable, inquiries } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -148,6 +150,51 @@ export const appRouter = router({
       if (!db) return [];
       return db.select().from(inquiries).orderBy(inquiries.createdAt);
     }),
+  }),
+
+  articles: router({
+    list: publicProcedure.query(() => getPublishedArticles()),
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(({ input }) => getArticleBySlug(input.slug)),
+    adminList: adminProcedure.query(() => getAllArticles()),
+    create: adminProcedure
+      .input(z.object({
+        title: z.string().min(1),
+        slug: z.string().min(1),
+        excerpt: z.string().optional(),
+        content: z.string().min(1),
+        coverImage: z.string().optional(),
+        authorName: z.string().optional(),
+        isPublished: z.boolean().default(false),
+      }))
+      .mutation(({ input }) => createArticle({
+        ...input,
+        publishedAt: input.isPublished ? new Date() : null,
+      })),
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        slug: z.string().optional(),
+        excerpt: z.string().optional(),
+        content: z.string().optional(),
+        coverImage: z.string().optional().nullable(),
+        authorName: z.string().optional(),
+        isPublished: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        const updateData: any = { ...data };
+        if (data.isPublished === true) {
+          const existing = await getArticleById(id);
+          if (!existing?.publishedAt) updateData.publishedAt = new Date();
+        }
+        return updateArticle(id, updateData);
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(({ input }) => deleteArticle(input.id)),
   }),
 
   stripe: router({

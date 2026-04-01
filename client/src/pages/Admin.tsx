@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Package, ShoppingBag, Tag, BarChart3, ChevronDown, ChevronUp, Mail, MapPin, Phone, User } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, ShoppingBag, Tag, BarChart3, ChevronDown, ChevronUp, Mail, MapPin, Phone, User, BookOpen, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -304,6 +304,159 @@ function OrderRow({ order, onUpdateStatus }: { order: any; onUpdateStatus: (id: 
   );
 }
 
+interface ArticleFormData {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  authorName: string;
+  isPublished: boolean;
+}
+
+const defaultArticleForm: ArticleFormData = {
+  title: "", slug: "", excerpt: "", content: "",
+  coverImage: "", authorName: "Bienvica", isPublished: false,
+};
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[\u0E00-\u0E7F]/g, (c) => c) // keep Thai chars
+    .replace(/\s+/g, "-")
+    .replace(/[^\u0E00-\u0E7Fa-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .slice(0, 100);
+}
+
+function ArticlesTab() {
+  const utils = trpc.useUtils();
+  const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [form, setForm] = useState<ArticleFormData>(defaultArticleForm);
+
+  const { data: articles, isLoading } = trpc.articles.adminList.useQuery();
+
+  const createArticle = trpc.articles.create.useMutation({
+    onSuccess: () => { utils.articles.adminList.invalidate(); setOpen(false); toast.success("สร้างบทความสำเร็จ"); },
+    onError: (e) => toast.error(e.message || "เกิดข้อผิดพลาด"),
+  });
+  const updateArticle = trpc.articles.update.useMutation({
+    onSuccess: () => { utils.articles.adminList.invalidate(); setOpen(false); toast.success("แก้ไขบทความสำเร็จ"); },
+    onError: (e) => toast.error(e.message || "เกิดข้อผิดพลาด"),
+  });
+  const deleteArticle = trpc.articles.delete.useMutation({
+    onSuccess: () => { utils.articles.adminList.invalidate(); toast.success("ลบบทความสำเร็จ"); },
+  });
+
+  const openCreate = () => { setEditId(null); setForm(defaultArticleForm); setOpen(true); };
+  const openEdit = (a: any) => {
+    setEditId(a.id);
+    setForm({ title: a.title, slug: a.slug, excerpt: a.excerpt || "", content: a.content, coverImage: a.coverImage || "", authorName: a.authorName || "Bienvica", isPublished: a.isPublished });
+    setOpen(true);
+  };
+
+  const handleSubmit = () => {
+    if (!form.title || !form.content) { toast.error("กรุณากรอกชื่อบทความและเนื้อหา"); return; }
+    const slug = form.slug || slugify(form.title) || `article-${Date.now()}`;
+    const data = { title: form.title, slug, excerpt: form.excerpt || undefined, content: form.content, coverImage: form.coverImage || undefined, authorName: form.authorName || undefined, isPublished: form.isPublished };
+    if (editId) updateArticle.mutate({ id: editId, ...data });
+    else createArticle.mutate(data);
+  };
+
+  const formatDate = (d: Date | string | null | undefined) => d ? new Date(d).toLocaleDateString("th-TH", { year: "numeric", month: "short", day: "numeric" }) : "";
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="font-serif text-xl font-semibold text-foreground">จัดการบทความ</h2>
+        <Button onClick={openCreate} className="bg-primary text-primary-foreground gap-2">
+          <Plus className="h-4 w-4" /> เพิ่มบทความ
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div>
+      ) : (
+        <div className="space-y-3">
+          {(!articles || articles.length === 0) && <p className="text-muted-foreground text-center py-8">ยังไม่มีบทความ กดปุ่ม "เพิ่มบทความ" เพื่อสร้างบทความแรก</p>}
+          {articles?.map((a) => (
+            <div key={a.id} className="bg-card rounded-xl border border-border p-4 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg overflow-hidden bg-emerald-50 flex-shrink-0">
+                {a.coverImage ? <img src={a.coverImage} alt={a.title} className="w-full h-full object-cover" /> : <BookOpen className="h-6 w-6 text-emerald-400 m-3" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-medium text-foreground truncate">{a.title}</span>
+                  {a.isPublished ? (
+                    <Badge className="bg-emerald-100 text-emerald-700 text-xs gap-1"><Eye className="h-3 w-3" />เผยแพร่</Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-xs gap-1"><EyeOff className="h-3 w-3" />ฉบับร่าง</Badge>
+                  )}
+                </div>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground mt-0.5">
+                  <span>{a.authorName || "Bienvica"}</span>
+                  {a.publishedAt && <span>{formatDate(a.publishedAt)}</span>}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="ghost" size="icon" onClick={() => openEdit(a)}><Pencil className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => { if (confirm("ลบบทความนี้?")) deleteArticle.mutate({ id: a.id }); }}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-serif">{editId ? "แก้ไขบทความ" : "สร้างบทความใหม่"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <Label>ชื่อบทความ *</Label>
+              <Input value={form.title} onChange={(e) => { setForm({ ...form, title: e.target.value, slug: editId ? form.slug : slugify(e.target.value) }); }} className="mt-1" />
+            </div>
+            <div>
+              <Label>Slug (URL)</Label>
+              <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} className="mt-1" placeholder="ชื่อ-บทความ-ภาษาอังกฤษ" />
+            </div>
+            <div>
+              <Label>บทนำ / สรุปย่อ</Label>
+              <Textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} className="mt-1 resize-none" rows={2} placeholder="สรุปบทความสั้นๆ สำหรับแสดงในหน้ารายการ" />
+            </div>
+            <div>
+              <Label>เนื้อหาบทความ *</Label>
+              <Textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="mt-1 resize-none" rows={10} placeholder="วางเนื้อหาบทความที่นี่ รองรับ **ตัวหนา** และ *ตัวเอียง*" />
+            </div>
+            <div>
+              <Label>URL รูปภาพหน้าปก</Label>
+              <Input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="https://..." className="mt-1" />
+            </div>
+            <div>
+              <Label>ชื่อผู้เขียน</Label>
+              <Input value={form.authorName} onChange={(e) => setForm({ ...form, authorName: e.target.value })} className="mt-1" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch checked={form.isPublished} onCheckedChange={(v) => setForm({ ...form, isPublished: v })} id="isPublished" />
+              <Label htmlFor="isPublished">เผยแพร่บทความ</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>ยกเลิก</Button>
+            <Button onClick={handleSubmit} disabled={createArticle.isPending || updateArticle.isPending} className="bg-primary text-primary-foreground">
+              {editId ? "บันทึก" : "สร้างบทความ"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
 function OrdersTab() {
   const utils = trpc.useUtils();
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -367,14 +520,16 @@ export default function Admin() {
           <p className="text-muted-foreground mt-1">จัดการร้านค้าของคุณ</p>
         </div>
         <Tabs defaultValue="products">
-          <TabsList className="mb-6">
+          <TabsList className="mb-6 flex-wrap h-auto">
             <TabsTrigger value="products" className="gap-2"><Package className="h-4 w-4" />สินค้า</TabsTrigger>
             <TabsTrigger value="categories" className="gap-2"><Tag className="h-4 w-4" />หมวดหมู่</TabsTrigger>
             <TabsTrigger value="orders" className="gap-2"><ShoppingBag className="h-4 w-4" />คำสั่งซื้อ</TabsTrigger>
+            <TabsTrigger value="articles" className="gap-2"><BookOpen className="h-4 w-4" />บทความ</TabsTrigger>
           </TabsList>
           <TabsContent value="products"><ProductsTab /></TabsContent>
           <TabsContent value="categories"><CategoriesTab /></TabsContent>
           <TabsContent value="orders"><OrdersTab /></TabsContent>
+          <TabsContent value="articles"><ArticlesTab /></TabsContent>
         </Tabs>
       </div>
     </div>

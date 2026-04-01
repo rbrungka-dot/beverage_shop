@@ -8,11 +8,13 @@ import {
   cartItems,
   orders,
   orderItems,
+  articles,
   InsertProduct,
   InsertCategory,
   InsertOrder,
   InsertOrderItem,
   InsertCartItem,
+  InsertArticle,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -297,4 +299,51 @@ export async function getOrderByStripeSession(stripeSessionId: string) {
   if (!db) return undefined;
   const result = await db.select().from(orders).where(eq(orders.stripeSessionId, stripeSessionId)).limit(1);
   return result[0];
+}
+
+// ─── Articles ────────────────────────────────────────────────────────────────
+
+export async function getPublishedArticles() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(articles).where(eq(articles.isPublished, true)).orderBy(desc(articles.publishedAt));
+}
+
+export async function getAllArticles() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(articles).orderBy(desc(articles.createdAt));
+}
+
+export async function getArticleBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(articles).where(eq(articles.slug, slug)).limit(1);
+  return result[0];
+}
+
+export async function getArticleById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(articles).where(eq(articles.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createArticle(data: InsertArticle) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  const [result] = await db.insert(articles).values(data);
+  return (result as any).insertId as number;
+}
+
+export async function updateArticle(id: number, data: Partial<InsertArticle>) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  await db.update(articles).set(data).where(eq(articles.id, id));
+}
+
+export async function deleteArticle(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  await db.delete(articles).where(eq(articles.id, id));
 }

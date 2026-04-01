@@ -84,3 +84,22 @@
 ## Bug Fixes (Round 3)
 - [x] ลบ OEM/รับจ้างผลิต section ออกจากหน้าแรก (Home.tsx)
 - [x] เพิ่ม OEM section ในหน้า About.tsx ก่อน section ติดต่อเรา
+
+## New Features (Round 4)
+- [ ] เปลี่ยนหัวข้อ "แพ็คเกจพิเศษ" เป็น "บทความ" ในหน้าสินค้า
+- [ ] สร้าง articles table ใน schema.ts
+- [ ] เพิ่ม tRPC procedures สำหรับ articles (list, getById)
+- [ ] เพิ่ม admin procedure สำหรับสร้าง/แก้ไข/ลบบทความ
+- [ ] สร้าง Articles section ในหน้าสินค้า แสดง card บทความ
+- [ ] สร้างหน้า /articles/:id สำหรับอ่านบทความเต็ม
+
+## New Features (Round 5 - Articles)
+- [ ] ลบหมวดหมู่ "แพ็คเกจพิเศษ" ออกจากฐานข้อมูล
+- [x] สร้าง articles table ใน schema.ts (title, content, coverImage, excerpt, publishedAt, authorName)
+- [x] Apply migration SQL สำหรับ articles table
+- [x] เพิ่ม tRPC procedures: articles.list, articles.getBySlug, articles.create (admin), articles.update (admin), articles.delete (admin)
+- [x] สร้างหน้า /articles แสดง card บทความทั้งหมด
+- [x] สร้างหน้า /articles/:slug สำหรับอ่านบทความเต็ม
+- [x] เพิ่ม link "บทความ" ใน Navbar
+- [x] เพิ่ม Articles tab ใน Admin Dashboard สำหรับสร้าง/แก้ไข/ลบบทความ
+- [x] เขียน Vitest tests สำหรับ articles DB helpers (22 tests ผ่านทั้งหมด)
