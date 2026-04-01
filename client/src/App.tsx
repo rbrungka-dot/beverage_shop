@@ -17,6 +17,7 @@ import TestPayment from "./pages/TestPayment";
 import Custom from "./pages/Custom";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
+import Stories from "./pages/Stories";
 import { useEffect } from "react";
 import { useAuth } from "./_core/hooks/useAuth";
 
@@ -56,6 +57,7 @@ function Router() {
           <Route path="/custom" component={Custom} />
           <Route path="/articles" component={Articles} />
           <Route path="/articles/:slug" component={ArticleDetail} />
+          <Route path="/stories" component={Stories} />
           <Route path="/test-payment" component={TestPayment} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />

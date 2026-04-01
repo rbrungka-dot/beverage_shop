@@ -103,3 +103,15 @@
 - [x] เพิ่ม link "บทความ" ใน Navbar
 - [x] เพิ่ม Articles tab ใน Admin Dashboard สำหรับสร้าง/แก้ไข/ลบบทความ
 - [x] เขียน Vitest tests สำหรับ articles DB helpers (22 tests ผ่านทั้งหมด)
+
+## Wall of Stories (Round 6)
+- [x] สร้าง stories table ใน schema.ts (id, authorName, authorTitle, content, imageUrl, isApproved, isFeatured, createdAt)
+- [x] Apply migration SQL สำหรับ stories table
+- [x] เพิ่ม DB helpers: getApprovedStories, getAllStories, createStory, approveStory, featureStory, deleteStory
+- [x] เพิ่ม tRPC procedures: stories.list, stories.submit, stories.adminList, stories.approve, stories.feature, stories.delete
+- [x] สร้างหน้า /stories แสดง Wall of Stories แบบ card grid พร้อม featured section
+- [x] เพิ่ม submission form ในหน้า /stories พร้อม success state
+- [x] เพิ่ม Stories tab ใน Admin Dashboard (อนุมัติ/ปฏิเสธ/แนะนำ/ลบ)
+- [x] เพิ่ม link "เรื่องเล่า" ใน Navbar
+- [ ] เพิ่ม Stories section preview ในหน้าแรก (Home.tsx)
+- [x] เขียน Vitest tests สำหรับ stories procedures (32 tests ผ่านทั้งหมด)

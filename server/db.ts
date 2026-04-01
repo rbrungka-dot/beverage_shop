@@ -9,12 +9,14 @@ import {
   orders,
   orderItems,
   articles,
+  stories,
   InsertProduct,
   InsertCategory,
   InsertOrder,
   InsertOrderItem,
   InsertCartItem,
   InsertArticle,
+  InsertStory,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -346,4 +348,43 @@ export async function deleteArticle(id: number) {
   const db = await getDb();
   if (!db) throw new Error("DB not available");
   await db.delete(articles).where(eq(articles.id, id));
+}
+
+// ─── Stories ────────────────────────────────────────────────────────────────────────────
+
+export async function getApprovedStories() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(stories).where(eq(stories.isApproved, true)).orderBy(desc(stories.createdAt));
+}
+
+export async function getAllStories() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(stories).orderBy(desc(stories.createdAt));
+}
+
+export async function createStory(data: InsertStory) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  const [result] = await db.insert(stories).values(data);
+  return (result as any).insertId as number;
+}
+
+export async function approveStory(id: number, isApproved: boolean) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  await db.update(stories).set({ isApproved }).where(eq(stories.id, id));
+}
+
+export async function featureStory(id: number, isFeatured: boolean) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  await db.update(stories).set({ isFeatured }).where(eq(stories.id, id));
+}
+
+export async function deleteStory(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  await db.delete(stories).where(eq(stories.id, id));
 }

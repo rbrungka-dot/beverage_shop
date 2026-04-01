@@ -137,3 +137,16 @@ export const articles = mysqlTable("articles", {
 });
 export type Article = typeof articles.$inferSelect;
 export type InsertArticle = typeof articles.$inferInsert;
+
+export const stories = mysqlTable("stories", {
+  id: int("id").autoincrement().primaryKey(),
+  authorName: varchar("authorName", { length: 200 }).notNull(),
+  authorTitle: varchar("authorTitle", { length: 200 }), // e.g. "คุณแม่วัย 35", "นักวิ่งมาราธอน"
+  content: text("content").notNull(),
+  imageUrl: varchar("imageUrl", { length: 500 }),
+  isApproved: boolean("isApproved").default(false).notNull(),
+  isFeatured: boolean("isFeatured").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Story = typeof stories.$inferSelect;
+export type InsertStory = typeof stories.$inferInsert;

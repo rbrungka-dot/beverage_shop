@@ -15,6 +15,7 @@ import {
   updateOrderByStripeSession, getOrderByStripeSession, getDb,
   getPublishedArticles, getAllArticles, getArticleBySlug, getArticleById,
   createArticle, updateArticle, deleteArticle,
+  getApprovedStories, getAllStories, createStory, approveStory, featureStory, deleteStory,
 } from "./db";
 import { orders as ordersTable, inquiries } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -312,6 +313,54 @@ export const appRouter = router({
         }
         return { status: order.status };
       }),
+  }),
+
+  stories: router({
+    // Public: list approved stories
+    list: publicProcedure.query(() => getApprovedStories()),
+
+    // Public: submit a story (anyone can submit, admin must approve)
+    submit: publicProcedure
+      .input(z.object({
+        authorName: z.string().min(1, "กรุณาระบุชื่อ"),
+        authorTitle: z.string().optional(),
+        content: z.string().min(20, "เรื่องเล่าต้องมีอย่างน้อย 20 ตัวอักษร"),
+        imageUrl: z.string().url().optional().or(z.literal("")),
+      }))
+      .mutation(async ({ input }) => {
+        const id = await createStory({
+          authorName: input.authorName,
+          authorTitle: input.authorTitle || null,
+          content: input.content,
+          imageUrl: input.imageUrl || null,
+          isApproved: false,
+          isFeatured: false,
+        });
+        await notifyOwner({
+          title: "มีเรื่องเล่าใหม่รออนุมัติ",
+          content: `จาก: ${input.authorName}${input.authorTitle ? ` (${input.authorTitle})` : ""}
+เนื้อหา: ${input.content.slice(0, 200)}${input.content.length > 200 ? "..." : ""}`,
+        }).catch(() => {});
+        return { id };
+      }),
+
+    // Admin: list all stories (including unapproved)
+    adminList: adminProcedure.query(() => getAllStories()),
+
+    // Admin: approve/reject
+    approve: adminProcedure
+      .input(z.object({ id: z.number(), isApproved: z.boolean() }))
+      .mutation(({ input }) => approveStory(input.id, input.isApproved)),
+
+    // Admin: feature/unfeature
+    feature: adminProcedure
+      .input(z.object({ id: z.number(), isFeatured: z.boolean() }))
+      .mutation(({ input }) => featureStory(input.id, input.isFeatured)),
+
+    // Admin: delete
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(({ input }) => deleteStory(input.id)),
   }),
 });
 

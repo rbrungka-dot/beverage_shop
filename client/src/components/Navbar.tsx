@@ -27,6 +27,7 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: "หน้าแรก" },
     { href: "/products", label: "สินค้า" },
+    { href: "/stories", label: "เรื่องเล่า" },
     { href: "/articles", label: "บทความ" },
     { href: "/custom", label: "รับจ้างผลิต" },
     { href: "/about", label: "เกี่ยวกับเรา" },

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Package, ShoppingBag, Tag, BarChart3, ChevronDown, ChevronUp, Mail, MapPin, Phone, User, BookOpen, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, ShoppingBag, Tag, BarChart3, ChevronDown, ChevronUp, Mail, MapPin, Phone, User, BookOpen, Eye, EyeOff, Heart, Star, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -498,6 +498,122 @@ function OrdersTab() {
   );
 }
 
+function StoriesTab() {
+  const utils = trpc.useUtils();
+  const { data: stories, isLoading } = trpc.stories.adminList.useQuery();
+
+  const approve = trpc.stories.approve.useMutation({
+    onSuccess: () => { utils.stories.adminList.invalidate(); toast.success("อัปเดตสำเร็จ"); },
+  });
+  const feature = trpc.stories.feature.useMutation({
+    onSuccess: () => { utils.stories.adminList.invalidate(); toast.success("อัปเดตสำเร็จ"); },
+  });
+  const deleteStory = trpc.stories.delete.useMutation({
+    onSuccess: () => { utils.stories.adminList.invalidate(); toast.success("ลบเรื่องเล่าสำเร็จ"); },
+  });
+
+  const formatDate = (d: Date | string) => new Date(d).toLocaleDateString("th-TH", { year: "numeric", month: "short", day: "numeric" });
+
+  const pending = stories?.filter((s) => !s.isApproved) ?? [];
+  const approved = stories?.filter((s) => s.isApproved) ?? [];
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="font-serif text-xl font-semibold text-foreground">จัดการเรื่องเล่า</h2>
+        <div className="flex gap-2 text-sm">
+          <Badge variant="outline" className="gap-1"><Heart className="h-3 w-3" />ทั้งหมด {stories?.length ?? 0}</Badge>
+          {pending.length > 0 && <Badge className="bg-amber-100 text-amber-700 gap-1">รออนุมัติ {pending.length}</Badge>}
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-xl" />)}</div>
+      ) : (
+        <div className="space-y-6">
+          {/* Pending */}
+          {pending.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-amber-600 mb-3 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                รออนุมัติ ({pending.length})
+              </h3>
+              <div className="space-y-3">
+                {pending.map((s) => (
+                  <div key={s.id} className="bg-amber-50 rounded-xl border border-amber-200 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium text-foreground">{s.authorName}</span>
+                          {s.authorTitle && <span className="text-xs text-muted-foreground">· {s.authorTitle}</span>}
+                          <span className="text-xs text-muted-foreground">{formatDate(s.createdAt)}</span>
+                        </div>
+                        <p className="text-sm text-foreground/80 line-clamp-3">{s.content}</p>
+                      </div>
+                      <div className="flex gap-1.5 flex-shrink-0">
+                        <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600 text-white gap-1 h-8" onClick={() => approve.mutate({ id: s.id, isApproved: true })}>
+                          <Check className="h-3.5 w-3.5" />อนุมัติ
+                        </Button>
+                        <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive h-8" onClick={() => { if (confirm("ลบเรื่องเล่านี้?")) deleteStory.mutate({ id: s.id }); }}>
+                          <X className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Approved */}
+          {approved.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-emerald-600 mb-3 flex items-center gap-1.5">
+                <Check className="h-3.5 w-3.5" />
+                เผยแพร่แล้ว ({approved.length})
+              </h3>
+              <div className="space-y-3">
+                {approved.map((s) => (
+                  <div key={s.id} className="bg-card rounded-xl border border-border p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="font-medium text-foreground">{s.authorName}</span>
+                          {s.authorTitle && <span className="text-xs text-muted-foreground">· {s.authorTitle}</span>}
+                          {s.isFeatured && <Badge className="bg-primary/10 text-primary text-xs gap-1"><Star className="h-3 w-3 fill-primary" />แนะนำ</Badge>}
+                          <span className="text-xs text-muted-foreground">{formatDate(s.createdAt)}</span>
+                        </div>
+                        <p className="text-sm text-foreground/80 line-clamp-2">{s.content}</p>
+                      </div>
+                      <div className="flex gap-1.5 flex-shrink-0">
+                        <Button
+                          size="sm" variant="ghost"
+                          className={`h-8 gap-1 ${s.isFeatured ? "text-primary" : "text-muted-foreground"}`}
+                          onClick={() => feature.mutate({ id: s.id, isFeatured: !s.isFeatured })}
+                          title={s.isFeatured ? "ยกเลิกแนะนำ" : "ตั้งเป็นแนะนำ"}
+                        >
+                          <Star className={`h-3.5 w-3.5 ${s.isFeatured ? "fill-primary" : ""}`} />
+                        </Button>
+                        <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive h-8" onClick={() => { if (confirm("ลบเรื่องเล่านี้?")) deleteStory.mutate({ id: s.id }); }}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {(!stories || stories.length === 0) && (
+            <p className="text-muted-foreground text-center py-8">ยังไม่มีเรื่องเล่าที่ส่งมา</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Admin() {
   const { user, isAuthenticated } = useAuth();
 
@@ -525,11 +641,13 @@ export default function Admin() {
             <TabsTrigger value="categories" className="gap-2"><Tag className="h-4 w-4" />หมวดหมู่</TabsTrigger>
             <TabsTrigger value="orders" className="gap-2"><ShoppingBag className="h-4 w-4" />คำสั่งซื้อ</TabsTrigger>
             <TabsTrigger value="articles" className="gap-2"><BookOpen className="h-4 w-4" />บทความ</TabsTrigger>
+            <TabsTrigger value="stories" className="gap-2"><Heart className="h-4 w-4" />เรื่องเล่า</TabsTrigger>
           </TabsList>
           <TabsContent value="products"><ProductsTab /></TabsContent>
           <TabsContent value="categories"><CategoriesTab /></TabsContent>
           <TabsContent value="orders"><OrdersTab /></TabsContent>
           <TabsContent value="articles"><ArticlesTab /></TabsContent>
+          <TabsContent value="stories"><StoriesTab /></TabsContent>
         </Tabs>
       </div>
     </div>
