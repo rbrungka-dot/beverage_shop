@@ -15,6 +15,13 @@
       "when": 1774937267607,
       "tag": "0001_grey_toro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1775006636213,
+      "tag": "0002_old_mariko_yashida",
+      "breakpoints": true
     }
   ]
 }

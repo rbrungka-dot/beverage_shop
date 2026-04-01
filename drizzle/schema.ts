@@ -105,3 +105,18 @@ export const orderItems = mysqlTable("order_items", {
 
 export type OrderItem = typeof orderItems.$inferSelect;
 export type InsertOrderItem = typeof orderItems.$inferInsert;
+
+export const inquiries = mysqlTable("inquiries", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  company: varchar("company", { length: 200 }),
+  email: varchar("email", { length: 200 }).notNull(),
+  phone: varchar("phone", { length: 50 }),
+  productType: varchar("productType", { length: 200 }),
+  moq: varchar("moq", { length: 100 }),
+  message: text("message").notNull(),
+  status: varchar("status", { length: 50 }).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Inquiry = typeof inquiries.$inferSelect;
+export type InsertInquiry = typeof inquiries.$inferInsert;

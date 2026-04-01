@@ -291,6 +291,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* OEM/Custom Manufacturing CTA */}
+      <section className="py-16 bg-[#1a1a1a]">
+        <div className="container max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm text-[#c8a96e] font-medium mb-5">
+                OEM / ODM Manufacturing
+              </div>
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+                รับจ้างผลิต<br />
+                <span className="text-[#c8a96e]">เครื่องดื่มแบรนด์ของคุณ</span>
+              </h2>
+              <p className="text-white/60 mb-6 leading-relaxed">
+                ต้องการสร้างแบรนด์เครื่องดื่มของตัวเอง? เราพร้อมพัฒนาสูตร ผลิต และออกแบบบรรจุภัณฑ์ให้ครบวงจร
+                ด้วยโรงงานมาตรฐาน GMP และทีม R&amp;D ที่มีประสบการณ์
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/custom">
+                  <Button className="bg-[#c8a96e] hover:bg-[#b8995e] text-white px-6">
+                    ขอใบเสนอราคา
+                  </Button>
+                </Link>
+                <Link href="/custom">
+                  <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 bg-transparent px-6">
+                    ดูรายละเอียด
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { num: "GMP", label: "มาตรฐานโรงงาน" },
+                { num: "R&D", label: "ทีมพัฒนาสูตร" },
+                { num: "MOQ", label: "ปริมาณขั้นต่ำต่ำ" },
+                { num: "360°", label: "บริการครบวงจร" },
+              ].map(({ num, label }) => (
+                <div key={label} className="bg-white/5 border border-white/10 rounded-xl p-5 text-center">
+                  <div className="text-2xl font-bold text-[#c8a96e] mb-1">{num}</div>
+                  <div className="text-sm text-white/60">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Brand Philosophy Quote */}
       <section className="py-16 bg-gradient-to-br from-primary/5 via-secondary to-accent/5">
         <div className="container max-w-3xl text-center space-y-6">

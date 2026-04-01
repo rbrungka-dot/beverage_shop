@@ -73,3 +73,10 @@
 - [x] Admin Dashboard: ป้องกันด้วย adminProcedure (role = admin เท่านั้น)
 - [x] Email ยืนยันคำสั่งซื้อ: ส่งอัตโนมัติหลัง verifyPayment สำเร็จ
 - [x] Email ยืนยันคำสั่งซื้อ: แสดงรายการสินค้า ราคา และที่อยู่จัดส่ง
+
+## New Features (Round 3)
+- [x] สร้างหน้า /custom สำหรับบริการรับจ้างผลิต (OEM/ODM)
+- [x] เพิ่ม tRPC procedure สำหรับรับ inquiry form (ชื่อ, บริษัท, อีเมล, เบอร์, รายละเอียด)
+- [x] เพิ่ม link "รับจ้างผลิต" ใน Navbar
+- [x] เพิ่ม section รับจ้างผลิตใน Landing page (Home.tsx)
+- [x] แจ้ง owner เมื่อมี inquiry ใหม่ผ่าน notifyOwner

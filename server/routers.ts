@@ -14,7 +14,7 @@ import {
   createOrder, getOrdersByUser, getAllOrders, getOrderById, getOrderItems, updateOrderStatus,
   updateOrderByStripeSession, getOrderByStripeSession, getDb,
 } from "./db";
-import { orders as ordersTable } from "../drizzle/schema";
+import { orders as ordersTable, inquiries } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", { apiVersion: "2026-03-25.dahlia" });
@@ -111,6 +111,43 @@ export const appRouter = router({
     updateStatus: adminProcedure
       .input(z.object({ id: z.number(), status: z.enum(["pending", "paid", "processing", "shipped", "delivered", "cancelled"]) }))
       .mutation(({ input }) => updateOrderStatus(input.id, input.status)),
+  }),
+
+  inquiry: router({
+    submit: publicProcedure
+      .input(z.object({
+        name: z.string().min(1, "กรุณากรอกชื่อ"),
+        company: z.string().optional(),
+        email: z.string().email("อีเมลไม่ถูกต้อง"),
+        phone: z.string().optional(),
+        productType: z.string().optional(),
+        moq: z.string().optional(),
+        message: z.string().min(10, "กรุณาอธิบายรายละเอียดอย่างน้อย 10 ตัวอักษร"),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        await db.insert(inquiries).values({
+          name: input.name,
+          company: input.company,
+          email: input.email,
+          phone: input.phone,
+          productType: input.productType,
+          moq: input.moq,
+          message: input.message,
+          status: "new",
+        });
+        await notifyOwner({
+          title: `📋 ใบสอบถามการผลิตใหม่ จาก ${input.name}`,
+          content: `บริษัท: ${input.company || "ไม่ระบุ"}\nอีเมล: ${input.email}\nโทร: ${input.phone || "ไม่ระบุ"}\nประเภทสินค้า: ${input.productType || "ไม่ระบุ"}\nปริมาณขั้นต่ำ: ${input.moq || "ไม่ระบุ"}\nรายละเอียด: ${input.message}`,
+        }).catch(() => {});
+        return { success: true };
+      }),
+    adminList: adminProcedure.query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(inquiries).orderBy(inquiries.createdAt);
+    }),
   }),
 
   stripe: router({

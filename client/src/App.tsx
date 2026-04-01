@@ -14,6 +14,7 @@ import Orders from "./pages/Orders";
 import About from "./pages/About";
 import Admin from "./pages/Admin";
 import TestPayment from "./pages/TestPayment";
+import Custom from "./pages/Custom";
 import { useEffect } from "react";
 import { useAuth } from "./_core/hooks/useAuth";
 
@@ -50,6 +51,7 @@ function Router() {
           <Route path="/orders/:id" component={Orders} />
           <Route path="/about" component={About} />
           <Route path="/admin" component={Admin} />
+          <Route path="/custom" component={Custom} />
           <Route path="/test-payment" component={TestPayment} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
