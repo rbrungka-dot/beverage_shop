@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-background to-secondary">
+      <section className="relative overflow-hidden bg-gradient-to-br from-muted via-background to-muted">
         {/* เบียงวิก้า — มุมซ้ายบน */}
         <div className="absolute top-6 left-6 md:top-8 md:left-10 z-10">
           <span className="font-serif text-sm md:text-base text-primary/70 italic tracking-wider">เบียงวิก้า</span>
@@ -87,8 +87,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
       {/* Key Features Bar */}
-      <section className="py-12 bg-background border-y border-border">
+      <section className="py-14 bg-background border-y border-border/60">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
@@ -111,8 +114,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
       {/* Triple Action Science Section */}
-      <section className="py-16 bg-secondary/30">
+      <section className="py-20 bg-gradient-to-b from-muted/60 to-background">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -159,8 +165,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
       {/* Ingredients Section */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
@@ -200,8 +209,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
       {/* Lifestyle Section */}
-      <section className="py-16 bg-secondary/30">
+      <section className="py-20 bg-gradient-to-b from-muted/40 to-background">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -231,9 +243,12 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
       {/* Categories */}
       {categories && categories.length > 0 && (
-        <section className="py-12 bg-background border-y border-border">
+        <section className="py-14 bg-background border-y border-border/60">
           <div className="container">
             <div className="text-center mb-8">
               <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">เลือกตามหมวดหมู่</h2>
@@ -253,7 +268,7 @@ export default function Home() {
       )}
 
       {/* Featured Products */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container">
           <div className="flex items-end justify-between mb-10">
             <div>
@@ -291,17 +306,20 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
       {/* Brand Philosophy Quote */}
-      <section className="py-16 bg-gradient-to-br from-primary/5 via-secondary to-accent/5">
-        <div className="container max-w-3xl text-center space-y-6">
-          <div className="w-12 h-0.5 bg-primary/40 mx-auto" />
+      <section className="py-20 bg-gradient-to-br from-muted/80 via-background to-muted/50">
+        <div className="container max-w-3xl text-center space-y-8">
+          <div className="gold-divider mx-auto w-16" />
           <blockquote className="font-serif text-2xl md:text-3xl font-medium text-foreground leading-relaxed italic">
             "เราเชื่อว่าความสุขที่แท้จริงนั้นแฝงอยู่ในช่วงเวลาเรียบง่ายของชีวิต — ในมื้ออาหารอบอุ่นกับครอบครัว ในรอยยิ้มและน้ำใจที่เพื่อนมอบให้กัน และในการดูแลสุขภาพของตัวเราเองและคนที่เรารัก"
           </blockquote>
-          <div className="w-12 h-0.5 bg-primary/40 mx-auto" />
+          <div className="gold-divider mx-auto w-16" />
           <p className="text-muted-foreground text-sm uppercase tracking-widest">— Bienvica Brand Philosophy</p>
           <Link href="/about">
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground mt-2">
+            <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground mt-2 rounded-full px-8">
               เรื่องราวของเรา
             </Button>
           </Link>

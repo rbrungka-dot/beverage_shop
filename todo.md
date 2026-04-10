@@ -115,3 +115,10 @@
 - [x] เพิ่ม link "เรื่องเล่า" ใน Navbar
 - [ ] เพิ่ม Stories section preview ในหน้าแรก (Home.tsx)
 - [x] เขียน Vitest tests สำหรับ stories procedures (32 tests ผ่านทั้งหมด)
+
+## Visual Theme Update — Quiet Ritual Moodboard (Round 7)
+- [x] ปรับ background เป็น warm cream (oklch(0.975 0.008 75)) แทนขาวสะอาด
+- [x] เพิ่ม sage green (oklch(0.70 0.055 165)) เป็น secondary color
+- [x] Playfair Display serif font สำหรับ h1-h6 ทั้งหมด
+- [x] เพิ่ม gold divider, badge-gold, badge-sage utility classes
+- [x] เพิ่ม whitespace (py-20) ระหว่าง section และ gold divider คั่นระหว่าง section

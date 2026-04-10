@@ -49,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.id}`} className="no-underline group">
-      <div className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 h-full flex flex-col">
+      <div className="bg-card rounded-2xl overflow-hidden border border-border/60 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-0.5 h-full flex flex-col">
         {/* Image */}
         <div className="relative aspect-square bg-secondary overflow-hidden">
           {product.imageUrl ? (
@@ -64,9 +64,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
           {product.isFeatured && (
-            <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs">
+            <span className="badge-gold absolute top-3 left-3 text-xs font-medium rounded-full px-2.5 py-0.5">
               แนะนำ
-            </Badge>
+            </span>
           )}
           {isOutOfStock && (
             <div className="absolute inset-0 bg-background/60 flex items-center justify-center">

@@ -34,7 +34,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/60" style={{borderBottomColor: 'oklch(0.88 0.014 72)'}}>
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
