@@ -61,9 +61,13 @@
   --primary: oklch(0.63 0.075 18);
   --primary-foreground: oklch(0.99 0.003 72);
 
-  /* Secondary — sage green (#8FAF9F) */
-  --secondary: oklch(0.70 0.055 165);
-  --secondary-foreground: oklch(0.99 0.003 72);
+  /* Secondary — warm blush rose (ใช้สำหรับ section bg อ่อนๆ) */
+  --secondary: oklch(0.94 0.018 20);
+  --secondary-foreground: oklch(0.35 0.025 20);
+
+  /* Sage green — ใช้เป็น custom property สำหรับ accent เล็กๆ */
+  --sage: oklch(0.70 0.055 165);
+  --sage-foreground: oklch(0.99 0.003 72);
 
   /* Muted — warm linen */
   --muted: oklch(0.945 0.012 72);

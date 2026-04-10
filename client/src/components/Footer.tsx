@@ -2,7 +2,7 @@ import { Link } from "wouter";
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary border-t border-border mt-auto">
+    <footer className="bg-primary/10 border-t border-primary/20 mt-auto">
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}

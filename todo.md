@@ -122,3 +122,7 @@
 - [x] Playfair Display serif font สำหรับ h1-h6 ทั้งหมด
 - [x] เพิ่ม gold divider, badge-gold, badge-sage utility classes
 - [x] เพิ่ม whitespace (py-20) ระหว่าง section และ gold divider คั่นระหว่าง section
+
+## Bug Fix — Footer Color (Round 7b)
+- [x] แก้ Footer สีเขียว sage green ให้กลับเป็น dusty rose (bg-primary/10) เหมือนเดิม
+- [x] ปรับ secondary เป็น warm blush rose, sage green เป็น --sage custom property แทน
