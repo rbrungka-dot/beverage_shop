@@ -126,3 +126,7 @@
 ## Bug Fix — Footer Color (Round 7b)
 - [x] แก้ Footer สีเขียว sage green ให้กลับเป็น dusty rose (bg-primary/10) เหมือนเดิม
 - [x] ปรับ secondary เป็น warm blush rose, sage green เป็น --sage custom property แทน
+
+## PromptPay Integration (Round 8)
+- [x] เพิ่ม promptpay ใน payment_method_types ของ Stripe Checkout session
+- [x] ตรวจสอบว่า currency เป็น thb เรียบร้อยแล้ว
