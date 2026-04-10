@@ -130,3 +130,9 @@
 ## PromptPay Integration (Round 8)
 - [x] เพิ่ม promptpay ใน payment_method_types ของ Stripe Checkout session
 - [x] ตรวจสอบว่า currency เป็น thb เรียบร้อยแล้ว
+
+## Curated Collection (Round 9)
+- [x] Generate placeholder images สำหรับ Skincare (3 ชิ้น) และ Tea (3 ชิ้น) โทน Quiet Ritual
+- [x] เพิ่มสินค้า placeholder Skincare + Tea ในฐานข้อมูล (6 SKU)
+- [x] สร้าง Curated Collection section ในหน้าแรก (Home.tsx) พร้อม Skincare + Tea grid
+- [ ] เพิ่ม filter category Skincare/Tea ในหน้า /products

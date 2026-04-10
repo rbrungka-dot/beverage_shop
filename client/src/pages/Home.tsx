@@ -1,9 +1,106 @@
 import { Link } from "wouter";
-import { ArrowRight, Leaf, Award, FlaskConical, Sparkles } from "lucide-react";
+import { ArrowRight, Leaf, Award, FlaskConical, Sparkles, Droplets, Flower2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
+
+function CuratedCollectionSection() {
+  const { data: skincareProducts, isLoading: loadingSkincare } = trpc.products.list.useQuery({ categoryId: 30001 });
+  const { data: teaProducts, isLoading: loadingTea } = trpc.products.list.useQuery({ categoryId: 30002 });
+
+  return (
+    <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+      <div className="container">
+        {/* Header */}
+        <div className="text-center mb-14">
+          <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5 mb-4">
+            Curated Collection
+          </span>
+          <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-3">
+            คัดสรรพิเศษ เพื่อ Quiet Ritual ของคุณ
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
+            Bienvica คัดสรรสินค้าที่เราเชื่อว่าดีจริง สำหรับผู้หญิงที่ดูแลตัวเองอย่างมีสไตล์ — ทั้งจากข้างในและข้างนอก
+          </p>
+        </div>
+
+        {/* Skincare */}
+        <div className="mb-14">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/10">
+              <Flower2 className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-serif text-xl font-semibold text-foreground">Skincare</h3>
+              <p className="text-xs text-muted-foreground">ผลิตภัณฑ์ดูแลผิวพรรณคัดสรรพิเศษ</p>
+            </div>
+            <Link href="/products?category=30001" className="ml-auto">
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 gap-1">
+                ดูทั้งหมด <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+            </Link>
+          </div>
+          {loadingSkincare ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="aspect-square rounded-xl" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+              {(skincareProducts ?? []).slice(0, 3).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="gold-divider mx-auto max-w-xs mb-14" />
+
+        {/* Tea */}
+        <div>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/10">
+              <Droplets className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-serif text-xl font-semibold text-foreground">Tea & Herbal</h3>
+              <p className="text-xs text-muted-foreground">ชาและเครื่องดื่มสมุนไพรคัดสรร</p>
+            </div>
+            <Link href="/products?category=30002" className="ml-auto">
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 gap-1">
+                ดูทั้งหมด <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+            </Link>
+          </div>
+          {loadingTea ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="aspect-square rounded-xl" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+              {(teaProducts ?? []).slice(0, 3).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const HERO_BOTTLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_hero_real_v2-2sL3KWZN2ju2MAKCpkKAtE.webp";
 const HERO_LIFESTYLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_lifestyle_khunprae-M6RLqrJpXieJGgJuZ7wYAD.webp";
@@ -305,6 +402,12 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
+      {/* Curated Collection */}
+      <CuratedCollectionSection />
 
       {/* Gold divider */}
       <div className="gold-divider mx-auto max-w-3xl" />
