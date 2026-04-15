@@ -175,13 +175,19 @@ export default function Home() {
               <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5">
                 Premium Science-Backed Wellness Beverage
               </span>
-              {/* ชื่อหลัก: Bienvica — Beyond Cider™ */}
-              <div className="space-y-1">
-                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight tracking-tight">
-                  Bienvica —
-                </h1>
-                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{color: 'var(--color-accent)'}}>
-                  Beyond Cider™
+              {/* ชื่อหลัก: Bienvica */}
+              <div>
+                <h1
+                  className="font-serif font-bold leading-none tracking-tight"
+                  style={{
+                    fontSize: 'clamp(3.5rem, 10vw, 7rem)',
+                    background: 'linear-gradient(135deg, oklch(0.28 0.025 50) 0%, oklch(0.60 0.065 10) 45%, oklch(0.73 0.085 72) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  Bienvica
                 </h1>
               </div>
               {/* Tagline ภายใต้ Return to Self */}
