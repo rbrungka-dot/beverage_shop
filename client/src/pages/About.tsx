@@ -148,9 +148,9 @@ function CoreTechnologySection() {
             {/* Key stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               {[
-                { icon: Leaf, text: "Quercetin 21.25 mg/ขวด" },
-                { icon: FlaskConical, text: "IC50: 0.27% vs 2.89%" },
-                { icon: Sparkles, text: "Dual Incretin: GLP-1 & GIP" },
+                { icon: Leaf, text: "High Antioxidant (เทียบเท่า Quercetin 17-20 mg/ขวด)" },
+                { icon: FlaskConical, text: "ยับยั้งเอนไซม์ย่อยคาร์บ (anti alpha-glucosidase) ได้ดีกว่ายา Acarbose" },
+                { icon: Sparkles, text: "Dual Incretin: GLP-1 & GIP เทียบเท่ายา Metformin" },
                 { icon: Award, text: "Caco-2 Cell Model Validated" },
               ].map((item) => (
                 <div key={item.text} className="flex items-center gap-2.5 bg-card rounded-lg px-3 py-2.5 border border-border">
