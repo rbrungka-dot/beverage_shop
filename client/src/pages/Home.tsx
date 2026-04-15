@@ -231,7 +231,7 @@ export default function Home() {
             </div>
             <div className="relative">
               <div className="aspect-[3/4] max-w-sm mx-auto rounded-2xl overflow-hidden shadow-2xl">
-                <img src={HERO_BOTTLE} alt="Bienvica Beyond Cider" className="w-full h-full object-cover" />
+                <img src={HERO_BOTTLE} alt="Bienvica Beyond Cider™" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-xl" />
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-accent/10 rounded-full blur-xl" />
@@ -542,7 +542,7 @@ export default function Home() {
         <div className="container max-w-3xl text-center space-y-8">
           <div className="gold-divider mx-auto w-16" />
           <blockquote className="font-serif text-2xl md:text-3xl font-medium text-foreground leading-relaxed italic">
-            "ร่างกายและจิตใจของผู้หญิงมีความต้องการที่แตกต่างกันในแต่ละช่วงเวลาของวัน — และในแต่ละช่วงของชีวิต Bienvica เชื่อว่าการดูแลตัวเองไม่ควรซับซ้อน ไม่ควรรู้สึกเหมือนยา และไม่ควรให้เธอต้องเลือกระหว่างสุขภาพกับความสุข"
+            "ร่างกายและจิตใจของผู้หญิงมีความต้องการที่แตกต่างกันในแต่ละช่วงเวลาของวัน — และในแต่ละช่วงของชีวิต เบียงวิก้า เชื่อว่าการดูแลตัวเองไม่ควรซับซ้อน ไม่ควรรู้สึกเหมือนยา และไม่ควรให้เธอต้องเลือกระหว่างสุขภาพกับความสุข"
           </blockquote>
           <div className="gold-divider mx-auto w-16" />
           <p className="text-muted-foreground text-sm uppercase tracking-widest">— Bienvica Brand Philosophy</p>
