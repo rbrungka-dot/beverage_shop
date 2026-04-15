@@ -19,7 +19,7 @@ function CuratedCollectionSection() {
             Curated Collection
           </span>
           <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-3">
-            คัดสรรพิเศษ เพื่อ Quiet Ritual ของคุณ
+            คัดสรรพิเศษ เพื่อคุณ
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
             Bienvica คัดสรรสินค้าที่เราเชื่อว่าดีจริง สำหรับผู้หญิงที่ดูแลตัวเองอย่างมีสไตล์ — ทั้งจากข้างในและข้างนอก
