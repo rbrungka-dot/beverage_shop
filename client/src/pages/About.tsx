@@ -4,7 +4,7 @@ import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Globe, 
 import { Button } from "@/components/ui/button";
 
 const CACTUS_FARM_HERO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_cactus_farm_hero-QuXeEiKTEEEXoFzBj3NUUQ.webp";
-const CACTUS_FARM_FOUNDER = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ceo_tum_farm_23f95aab.png";
+const CACTUS_FARM_FOUNDER = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/founder-cactus-farm_f30070a5.webp";
 const CORE_TECH = [
   {
     id: 1,
@@ -207,7 +207,7 @@ export default function About() {
                 <img
                   src={CACTUS_FARM_FOUNDER}
                   alt="คุณตั้ม CEO Bienvica ในฟาร์มกระบองเพชร"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
               {/* Floating badge */}
