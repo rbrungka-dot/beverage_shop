@@ -46,8 +46,8 @@ export default function Footer() {
               ติดต่อ
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>อีเมล: hello@bienvica.com</li>
-              <li>โทร: 02-xxx-xxxx</li>
+              <li>อีเมล: admin@bienvica.com</li>
+              <li>โทร: +66 64 654 0592</li>
               <li>เวลาทำการ: จันทร์–ศุกร์ 9:00–18:00</li>
             </ul>
           </div>
