@@ -203,7 +203,7 @@ export default function Home() {
                 wellness ecosystem ที่ออกแบบมาเพื่อทุก moment ของวัน — ผสานพลังจากกุหลาบมอญ กระบองเพชร และแอปเปิ้ลไซเดอร์ ผ่านการพิสูจน์ทางวิทยาศาสตร์ระดับเซลล์
               </p>
               <p className="text-sm text-accent font-medium italic">
-                "Feel Like Myself Again — วิทยาศาสตร์ความงามที่ดื่มได้"
+                "Feel Like Myself Again — คุณเลือกที่จะเป็นตัวเองที่มีความสุขได้"
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link href="/products">
