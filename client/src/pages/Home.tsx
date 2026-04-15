@@ -542,7 +542,7 @@ export default function Home() {
         <div className="container max-w-3xl text-center space-y-8">
           <div className="gold-divider mx-auto w-16" />
           <blockquote className="font-serif text-2xl md:text-3xl font-medium text-foreground leading-relaxed italic">
-            "ร่างกายและจิตใจของผู้หญิงมีความต้องการที่แตกต่างกันในแต่ละช่วงเวลาของวัน — และในแต่ละช่วงของชีวิต เบียงวิก้า เชื่อว่าการดูแลตัวเองไม่ควรซับซ้อน ไม่ควรรู้สึกเหมือนยา และไม่ควรให้เธอต้องเลือกระหว่างสุขภาพกับความสุข"
+            "ร่างกายและจิตใจของผู้หญิงมีความต้องการที่แตกต่างกันในแต่ละช่วงเวลาของวัน — และในแต่ละช่วงของชีวิต Bienvica เชื่อว่าการดูแลตัวเองไม่ควรซับซ้อน ไม่ควรรู้สึกเหมือนยา และไม่ควรให้เธอต้องเลือกระหว่างสุขภาพกับความสุข"
           </blockquote>
           <div className="gold-divider mx-auto w-16" />
           <p className="text-muted-foreground text-sm uppercase tracking-widest">— Bienvica Brand Philosophy</p>
