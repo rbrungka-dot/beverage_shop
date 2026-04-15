@@ -136,3 +136,8 @@
 - [x] เพิ่มสินค้า placeholder Skincare + Tea ในฐานข้อมูล (6 SKU)
 - [x] สร้าง Curated Collection section ในหน้าแรก (Home.tsx) พร้อม Skincare + Tea grid
 - [ ] เพิ่ม filter category Skincare/Tea ในหน้า /products
+
+## Return to Self Theme Update (Round 10)
+- [x] ปรับ primary color เป็น mauve/dusty rose อมเทาอุ่น (oklch 0.60 0.065 10) ตาม wax seal ใน moodboard
+- [x] เปลี่ยน tagline หน้าแรกเป็น "คืนสู่ตัวเอง ในทุก moment ที่เป็นตัวคุณ"
+- [x] เพิ่ม subtitle "การดูแลตัวเองไม่ใช่ความฟุ่มเฟอย" และ quote "Feel Like Myself Again"

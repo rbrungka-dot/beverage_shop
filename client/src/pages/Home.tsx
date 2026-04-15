@@ -134,20 +134,20 @@ export default function Home() {
                   Beyond Cider™
                 </h1>
               </div>
-              {/* Tagline ภาษาไทย */}
+              {/* Tagline ภายใต้ Return to Self */}
               <div className="space-y-1">
                 <p className="font-serif text-xl md:text-2xl font-semibold text-foreground leading-snug">
-                  นวัตกรรมดูแลลึกระดับเซลล์
+                  คืนสู่ตัวเอง ในทุก moment ที่เป็นตัวคุณ
                 </p>
-                <p className="font-serif text-xl md:text-2xl font-semibold text-foreground leading-snug">
-                  วิทยาศาสตร์ความงามที่ดื่มได้
+                <p className="font-serif text-lg md:text-xl text-muted-foreground leading-snug">
+                  การดูแลตัวเองไม่ใช่ความฟุ่มเฟอย — มันคือวิถีที่คุณกลับมาเป็นคุณ
                 </p>
               </div>
               <p className="text-muted-foreground text-base leading-relaxed max-w-md">
                 เครื่องดื่ม 0% แชมเปญเพื่อสุขภาพ ผสานพลังจากกุหลาบมอญ กระบองเพชร และแอปเปิ้ลไซเดอร์ ผ่านการพิสูจน์ทางวิทยาศาสตร์ระดับเซลล์
               </p>
               <p className="text-sm text-accent font-medium italic">
-                "ความสุขที่เริ่มต้นจากสุขภาพที่ดีและช่วงเวลาเรียบง่ายที่ใส่ใจ"
+                "Feel Like Myself Again — วิทยาศาสตร์ความงามที่ดื่มได้"
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link href="/products">
