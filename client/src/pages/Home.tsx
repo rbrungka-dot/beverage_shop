@@ -190,7 +190,7 @@ export default function Home() {
                   คืนสู่ตัวเอง ในทุก moment ที่เป็นตัวคุณ
                 </p>
                 <p className="font-serif text-lg md:text-xl text-muted-foreground leading-snug">
-                  การดูแลตัวเองไม่ใช่ความฟุ่มเฟอย — มันคือวิถีที่คุณกลับมาเป็นคุณ
+                  การดูแลตัวเองไม่ใช่ความฟุ่มเฟือย — มันคือวิถีที่คุณกลับมาเป็นคุณ
                 </p>
               </div>
               <p className="text-muted-foreground text-base leading-relaxed max-w-md">
