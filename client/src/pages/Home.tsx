@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "wouter";
 import { ArrowRight, Leaf, Award, FlaskConical, Sparkles, Droplets, Flower2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -102,6 +103,55 @@ function CuratedCollectionSection() {
   );
 }
 
+function ComingSoonNotifyButton({ productName }: { productName: string }) {
+  const [email, setEmail] = React.useState("");
+  const [submitted, setSubmitted] = React.useState(false);
+  const [showForm, setShowForm] = React.useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubmitted(true);
+      setShowForm(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <p className="text-xs text-accent font-medium">✓ เราจะแจ้งคุณเมื่อพร้อมแล้วค่ะ</p>
+    );
+  }
+
+  if (showForm) {
+    return (
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full">
+        <input
+          type="email"
+          placeholder="อีเมลของคุณ"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="w-full text-sm px-3 py-2 rounded-full border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+        <Button type="submit" size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full w-full">
+          แจ้งฉันเมื่อพร้อม
+        </Button>
+      </form>
+    );
+  }
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="border-border/60 text-muted-foreground hover:border-primary hover:text-primary rounded-full px-6"
+      onClick={() => setShowForm(true)}
+    >
+      แจ้งฉันเมื่อพร้อม
+    </Button>
+  );
+}
+
 const HERO_BOTTLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_hero_real_v2-2sL3KWZN2ju2MAKCpkKAtE.webp";
 const HERO_LIFESTYLE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_lifestyle_khunprae-M6RLqrJpXieJGgJuZ7wYAD.webp";
 const INGREDIENTS_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_ingredients_real_v2-ahVK4XsKggF9475yzR82SH.webp";
@@ -144,7 +194,7 @@ export default function Home() {
                 </p>
               </div>
               <p className="text-muted-foreground text-base leading-relaxed max-w-md">
-                เครื่องดื่ม 0% แชมเปญเพื่อสุขภาพ ผสานพลังจากกุหลาบมอญ กระบองเพชร และแอปเปิ้ลไซเดอร์ ผ่านการพิสูจน์ทางวิทยาศาสตร์ระดับเซลล์
+                wellness ecosystem ที่ออกแบบมาเพื่อทุก moment ของวัน — ผสานพลังจากกุหลาบมอญ กระบองเพชร และแอปเปิ้ลไซเดอร์ ผ่านการพิสูจน์ทางวิทยาศาสตร์ระดับเซลล์
               </p>
               <p className="text-sm text-accent font-medium italic">
                 "Feel Like Myself Again — วิทยาศาสตร์ความงามที่ดื่มได้"
@@ -194,7 +244,7 @@ export default function Home() {
             {[
               { icon: Leaf, title: "วัตถุดิบธรรมชาติ", desc: "กุหลาบมอญ + กระบองเพชร + แอปเปิ้ลไซเดอร์ จากแหล่งท้องถิ่น" },
               { icon: FlaskConical, title: "พิสูจน์ทางวิทยาศาสตร์", desc: "ทดสอบผ่านโมเดลเซลล์ลำไส้มนุษย์ (Caco-2) อย่างเป็นทางการ" },
-              { icon: Sparkles, title: "0% แอลกอฮอล์", desc: "เพลิดเพลินแบบแชมเปญ ดูแลสุขภาพได้โดยไม่ต้องกังวล" },
+              { icon: Sparkles, title: "Balance & Restore", desc: "สมดุลจากข้างใน เพื่อให้คุณสวยและดีจากข้างนอก" },
               { icon: Award, title: "รางวัลระดับประเทศ", desc: "ได้รับรางวัล Best of the Best จากโครงการ Genius AGRO360" },
             ].map((f) => (
               <div key={f.title} className="flex gap-4 items-start">
@@ -408,6 +458,75 @@ export default function Home() {
 
       {/* Curated Collection */}
       <CuratedCollectionSection />
+
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
+      {/* Coming Soon — Gummies & Shot */}
+      <section className="py-20 bg-gradient-to-b from-muted/40 to-background">
+        <div className="container">
+          <div className="text-center mb-12">
+            <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5 mb-4">
+              Wellness Ecosystem
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-3">
+              ทุก moment ของวัน มีสินค้าของ Bienvica
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Balance · Reset · Celebrate — สามเสาหลักที่ดูแลคุณตั้งแต่เช้าจนค่ำ
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {/* Sparkling — Available */}
+            <div className="relative rounded-2xl border border-border bg-card p-8 text-center flex flex-col items-center gap-4 shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">🥂</div>
+              <div>
+                <p className="text-xs font-medium text-accent uppercase tracking-widest mb-1">Celebrate</p>
+                <h3 className="font-serif text-xl font-semibold text-foreground">Sparkling</h3>
+                <p className="text-sm text-muted-foreground mt-2">ฉลองตัวเอง ในแบบที่ดูแลร่างกายด้วย</p>
+              </div>
+              <Link href="/products">
+                <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6">
+                  ดูสินค้า
+                </Button>
+              </Link>
+            </div>
+
+            {/* Gummies — Coming Soon */}
+            <div className="relative rounded-2xl border border-dashed border-border/60 bg-muted/30 p-8 text-center flex flex-col items-center gap-4">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="bg-accent text-accent-foreground text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                  Coming Soon
+                </span>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl opacity-60">🌿</div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1">Balance</p>
+                <h3 className="font-serif text-xl font-semibold text-foreground/70">Daily Gummies</h3>
+                <p className="text-sm text-muted-foreground mt-2">Daily ritual สะสมผลระยะยาว ให้ร่างกาย balance ทุกวัน</p>
+              </div>
+              <ComingSoonNotifyButton productName="Daily Gummies" />
+            </div>
+
+            {/* Shot — Coming Soon */}
+            <div className="relative rounded-2xl border border-dashed border-border/60 bg-muted/30 p-8 text-center flex flex-col items-center gap-4">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="bg-accent text-accent-foreground text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                  Coming Soon
+                </span>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl opacity-60">⚡</div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1">Reset</p>
+                <h3 className="font-serif text-xl font-semibold text-foreground/70">Instant Shot</h3>
+                <p className="text-sm text-muted-foreground mt-2">Reset พลังงานหรือคืนความนิ่ง ตามสิ่งที่วันนั้นต้องการ</p>
+              </div>
+              <ComingSoonNotifyButton productName="Instant Shot" />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Gold divider */}
       <div className="gold-divider mx-auto max-w-3xl" />

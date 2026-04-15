@@ -141,3 +141,7 @@
 - [x] ปรับ primary color เป็น mauve/dusty rose อมเทาอุ่น (oklch 0.60 0.065 10) ตาม wax seal ใน moodboard
 - [x] เปลี่ยน tagline หน้าแรกเป็น "คืนสู่ตัวเอง ในทุก moment ที่เป็นตัวคุณ"
 - [x] เพิ่ม subtitle "การดูแลตัวเองไม่ใช่ความฟุ่มเฟอย" และ quote "Feel Like Myself Again"
+
+## Brand Ecosystem Update (Round 11)
+- [x] ลบประโยค 0% alc. ออกจาก hero section และ feature card ในหน้าแรก
+- [x] เพิ่ม Coming Soon section ในหน้าแรก — Gummies (Daily Balance) และ Shot (Instant Reset) พร้อม notify form
