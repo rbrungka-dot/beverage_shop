@@ -41,6 +41,7 @@ export const categories = mysqlTable("categories", {
   name: varchar("name", { length: 100 }).notNull(),
   slug: varchar("slug", { length: 100 }).notNull().unique(),
   description: text("description"),
+  sortOrder: int("sort_order").default(999).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

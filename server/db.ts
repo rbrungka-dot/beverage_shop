@@ -84,7 +84,7 @@ export async function updateUserStripeCustomerId(userId: number, stripeCustomerI
 export async function getCategories() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(categories).orderBy(categories.id);
+  return db.select().from(categories).orderBy(categories.sortOrder, categories.id);
 }
 
 export async function createCategory(data: InsertCategory) {
