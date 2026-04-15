@@ -42,7 +42,7 @@ const CORE_TECH = [
 
 const STORY_TIMELINE = [
   {
-    year: "16 ปีก่อน",
+    year: "18 ปีก่อน",
     title: "จุดเริ่มต้นจากไม้ประดับ",
     desc: "ทุกอย่างเริ่มต้นจากความหลงใหลในกระบองเพชร — พืชที่แข็งแกร่ง สวยงาม และซ่อนคุณค่าไว้มากกว่าที่ตาเห็น ผู้ก่อตั้งของเราเริ่มปลูกกระบองเพชรเป็นไม้ประดับ ดูแลด้วยมือตัวเอง และค่อยๆ สะสมความรู้เกี่ยวกับพืชชนิดนี้อย่างลึกซึ้ง",
   },
@@ -54,7 +54,7 @@ const STORY_TIMELINE = [
   {
     year: "วันนี้",
     title: "Bienvica — เครื่องดื่มที่กินได้จากฟาร์ม",
-    desc: "ด้วยประสบการณ์กว่า 16 ปีในการปลูกกระบองเพชร ผสานกับความรู้ด้านวิทยาศาสตร์การอาหาร เราได้สร้าง Bienvica Beyond Cider™ — เครื่องดื่มที่นำ p-Coumaric acid จากกระบองเพชรมาเป็นหัวใจสำคัญ ร่วมกับ Damask Rose และ Apple Cider Vinegar เพื่อดูแลสุขภาพระดับเซลล์",
+    desc: "ด้วยประสบการณ์กว่า 18 ปีในการปลูกกระบองเพชร ผสานกับความรู้ด้านวิทยาศาสตร์การอาหาร เราได้สร้าง Bienvica Beyond Cider™ — เครื่องดื่มที่นำสารสกัดจากกระบองเพชรมาเป็นหัวใจสำคัญ ร่วมกับกุหลาบมอญและ Apple Cider Vinegar เพื่อดูแลสุขภาพระดับเซลล์",
   },
 ];
 
@@ -192,7 +192,7 @@ export default function About() {
             <span className="text-accent italic">สู่เครื่องดื่มดูแลสุขภาพ</span>
           </h1>
           <p className="text-white/80 text-lg max-w-xl drop-shadow">
-            16 ปีแห่งความรัก ความอดทน และความเชื่อว่ากระบองเพชรมีคุณค่ามากกว่าที่ตาเห็น
+            18 ปีแห่งความรัก ความอดทน และความเชื่อว่ากระบองเพชรมีคุณค่ามากกว่าที่ตาเห็น
           </p>
         </div>
       </section>
@@ -213,7 +213,7 @@ export default function About() {
               {/* Floating badge */}
               <div className="absolute -bottom-4 -right-4 bg-card border border-border rounded-xl px-5 py-3 shadow-xl">
                 <p className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">ประสบการณ์</p>
-                <p className="font-serif text-2xl font-bold text-foreground">16 ปี</p>
+                <p className="font-serif text-2xl font-bold text-foreground">18 ปี</p>
                 <p className="text-xs text-muted-foreground">การปลูกกระบองเพชร</p>
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function About() {
               </div>
 
               <p className="text-muted-foreground leading-relaxed text-base">
-                ก่อนที่จะมี Bienvica มีฟาร์มกระบองเพชรเล็กๆ ในสกลนคร ที่เริ่มต้นจากความหลงใหลในพืชที่แข็งแกร่งและงดงามชนิดนี้ ผู้ก่อตั้งของเราดูแลกระบองเพชรด้วยมือตัวเองมานานกว่า 16 ปี เรียนรู้ทุกรายละเอียดของพืชชนิดนี้อย่างลึกซึ้ง
+                ก่อนที่จะมี Bienvica มีฟาร์มกระบองเพชรเล็กๆ ในสกลนคร ที่เริ่มต้นจากความหลงใหลในพืชที่แข็งแกร่งและงดงามชนิดนี้ ผู้ก่อตั้งของเราดูแลกระบองเพชรด้วยมือตัวเองมานานกว่า 18 ปี เรียนรู้ทุกรายละเอียดของพืชชนิดนี้อย่างลึกซึ้ง
               </p>
 
               <p className="text-muted-foreground leading-relaxed text-base">
@@ -239,7 +239,7 @@ export default function About() {
               </p>
 
               <p className="text-muted-foreground leading-relaxed text-base">
-                นั่นคือจุดเริ่มต้นของการศึกษาด้าน Food Science อย่างจริงจัง และในที่สุด Bienvica Beyond Cider™ ก็ถือกำเนิดขึ้น — เครื่องดื่มที่นำ p-Coumaric acid จากกระบองเพชรมาเป็นหัวใจสำคัญ ผสานกับ Damask Rose และ Apple Cider Vinegar เพื่อดูแลสุขภาพระดับเซลล์
+                นั่นคือจุดเริ่มต้นของการพัฒนาสูตรอย่างจริงจัง ร่วมกับการวิจัยเชิงลึกกับมหาวิทยาลัย และในที่สุด Bienvica Beyond Cider™ ก็ถือกำเนิดขึ้น — เครื่องดื่มที่นำสารสกัดจากกระบองเพชรมาเป็นหัวใจสำคัญ ผสานกับกุหลาบมอญและ Apple Cider Vinegar เพื่อดูแลสุขภาพระดับเซลล์
               </p>
 
               <div className="flex flex-wrap gap-3 pt-2">
