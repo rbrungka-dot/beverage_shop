@@ -244,16 +244,16 @@ export default function About() {
 
               <div className="flex flex-wrap gap-3 pt-2">
                 <div className="bg-secondary rounded-lg px-4 py-2 text-sm">
-                  <span className="font-semibold text-foreground">2,000 ขวด/ปี</span>
-                  <span className="text-muted-foreground ml-1">ยอดขาย</span>
+                  <span className="font-semibold text-foreground">Scientific Formula</span>
+                  <span className="text-muted-foreground ml-1">สูตรที่ผ่านการทดลอง</span>
                 </div>
                 <div className="bg-secondary rounded-lg px-4 py-2 text-sm">
                   <span className="font-semibold text-foreground">Tops Supermarket</span>
                   <span className="text-muted-foreground ml-1">พาร์ทเนอร์</span>
                 </div>
                 <div className="bg-secondary rounded-lg px-4 py-2 text-sm">
-                  <span className="font-semibold text-foreground">THAIFEX</span>
-                  <span className="text-muted-foreground ml-1">ออกบูธ</span>
+                  <span className="font-semibold text-foreground">Innovation Award</span>
+                  <span className="text-muted-foreground ml-1">รางวัล</span>
                 </div>
               </div>
             </div>
