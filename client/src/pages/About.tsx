@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Globe, MessageCircle, ArrowRight, ChevronLeft, ChevronRight, Factory } from "lucide-react";
+import { Leaf, Award, Heart, Users, FlaskConical, Sparkles, Phone, Mail, Facebook, MessageCircle, ArrowRight, ChevronLeft, ChevronRight, Factory } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CACTUS_FARM_HERO = "https://d2xsxph8kpxj0f.cloudfront.net/310519663084993239/YGoR3BS934bR93H6563cHY/bienvica_cactus_farm_hero-QuXeEiKTEEEXoFzBj3NUUQ.webp";
@@ -402,18 +402,30 @@ export default function About() {
             {[
               { icon: Phone, label: "โทรศัพท์", value: "+66 64 654 0592" },
               { icon: Mail, label: "อีเมล", value: "thanakrittum@gmail.com" },
-              { icon: Globe, label: "เว็บไซต์", value: "www.bienvica.com" },
+              { icon: Facebook, label: "Facebook", value: "Bienvica - Beyond Cider", href: "https://www.facebook.com/profile.php?id=61578488837019" },
               { icon: MessageCircle, label: "Line", value: "@bienvica" },
             ].map((c) => (
-              <div key={c.label} className="bg-card rounded-xl p-4 flex items-center gap-3 text-left border border-border">
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <c.icon className="h-4 w-4 text-primary" />
+              c.href ? (
+                <a key={c.label} href={c.href} target="_blank" rel="noopener noreferrer" className="bg-card rounded-xl p-4 flex items-center gap-3 text-left border border-border hover:border-primary/40 transition-colors">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <c.icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground text-xs uppercase tracking-wide mb-0.5">{c.label}</p>
+                    <p className="text-muted-foreground">{c.value}</p>
+                  </div>
+                </a>
+              ) : (
+                <div key={c.label} className="bg-card rounded-xl p-4 flex items-center gap-3 text-left border border-border">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <c.icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground text-xs uppercase tracking-wide mb-0.5">{c.label}</p>
+                    <p className="text-muted-foreground">{c.value}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-foreground text-xs uppercase tracking-wide mb-0.5">{c.label}</p>
-                  <p className="text-muted-foreground">{c.value}</p>
-                </div>
-              </div>
+              )
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-6">บริษัท สกลนคร สร้างสุข จำกัด</p>
