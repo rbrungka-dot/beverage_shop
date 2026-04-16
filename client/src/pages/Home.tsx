@@ -173,7 +173,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5">
-                Premium Science-Backed Wellness Beverage
+                Premium Science-Backed Wellness
               </span>
               {/* ชื่อหลัก: Bienvica */}
               <div>
