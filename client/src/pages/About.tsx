@@ -244,16 +244,16 @@ export default function About() {
 
               <div className="flex flex-wrap gap-3 pt-2">
                 <div className="bg-secondary rounded-lg px-4 py-2 text-sm">
-                  <span className="font-semibold text-foreground">Scientific Formula</span>
-                  <span className="text-muted-foreground ml-1">สูตรที่ผ่านการทดลอง</span>
+                  <span className="font-semibold text-foreground">🌵 18 ปี Cactus Expertise</span>
+                  <span className="text-muted-foreground ml-1">ความเชี่ยวชาญวัตถุดิบ</span>
                 </div>
                 <div className="bg-secondary rounded-lg px-4 py-2 text-sm">
-                  <span className="font-semibold text-foreground">Tops Supermarket</span>
-                  <span className="text-muted-foreground ml-1">พาร์ทเนอร์</span>
+                  <span className="font-semibold text-foreground">🔬 University Research</span>
+                  <span className="text-muted-foreground ml-1">วิจัยร่วมสถาบันการศึกษา</span>
                 </div>
                 <div className="bg-secondary rounded-lg px-4 py-2 text-sm">
-                  <span className="font-semibold text-foreground">Innovation Award</span>
-                  <span className="text-muted-foreground ml-1">รางวัล</span>
+                  <span className="font-semibold text-foreground">🏆 Innovation Award</span>
+                  <span className="text-muted-foreground ml-1">รางวัลการันตีคุณภาพ</span>
                 </div>
               </div>
             </div>
