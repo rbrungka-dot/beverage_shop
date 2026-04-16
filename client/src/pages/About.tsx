@@ -402,7 +402,7 @@ export default function About() {
             {[
               { icon: Phone, label: "โทรศัพท์", value: "+66 64 654 0592" },
               { icon: Mail, label: "อีเมล", value: "thanakrittum@gmail.com" },
-              { icon: Facebook, label: "Facebook", value: "Bienvica - Beyond Cider", href: "https://www.facebook.com/profile.php?id=61578488837019" },
+              { icon: Facebook, label: "Facebook", value: "Bienvica เบียงวิก้า - Beyond Cider", href: "https://www.facebook.com/profile.php?id=61578488837019" },
               { icon: MessageCircle, label: "Line", value: "@bienvica" },
             ].map((c) => (
               c.href ? (
@@ -429,6 +429,7 @@ export default function About() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-6">บริษัท สกลนคร สร้างสุข จำกัด</p>
+          <p className="text-xs text-muted-foreground mt-1">172 หมู่ที่ 5 ตำบลฮางโฮง อำเภอเมืองสกลนคร จังหวัดสกลนคร 47000</p>
         </div>
       </section>
     </div>
