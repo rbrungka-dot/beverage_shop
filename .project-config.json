@@ -1,0 +1,46 @@
+{
+  "build_command": "pnpm run build",
+  "capabilities": [
+    "server",
+    "db",
+    "user"
+  ],
+  "dev_command": "pnpm run dev",
+  "env_vars": {
+    "DATABASE_URL": "mysql://bKNEcHtCH9Bdx7t.root:3RqTpFSV597a7kLzeKg9@gateway05.us-east-1.prod.aws.tidbcloud.com:4000/YGoR3BS934bR93H6563cHY?ssl={\"rejectUnauthorized\":true}"
+  },
+  "experiments": [
+    "no_db_push"
+  ],
+  "git_remote": {
+    "repo_url": "s3://vida-prod-gitrepo/webdev-git/310519663084993239/YGoR3BS934bR93H6563cHY",
+    "access_key_id": "ASIAZV3A2ECZGXQFJ5KS",
+    "secret_access_key": "QizglYaqpajrLZLmG8EdX/HEgz0RIqm/EZ5YVs7+",
+    "session_token": "IQoJb3JpZ2luX2VjEMT//////////wEaCXVzLWVhc3QtMSJIMEYCIQCTDlw84+LvasIRirZeNmpkJLQPnlTLrkPhk/B/rUcBcwIhAMv8YPpBO9up59rnbVpnWqHNZXP9CZdAYsdxUnkGW8mJKv8DCI3//////////wEQBBoMNjY1Mzg2MDk4ODY2Igz31TaHD3jydJVPtRgq0wMjXCUEuLUB5yz+h+LLLGd6enmzM6aIzjhFyDyDmawav5PbM0Qnb/cprkVQQifsGejnYz2oJRr2qQnvZkLlMG7rxTPWtnWSup1pk7eWJoEuivfnxmgsVFFxqI05TK9V/Csq2OhUPM/2DJ9nljE9eytcrSaijI9xJKyOyFYV0rTV5c4iHM99lAgWu1UX8PZVDmAmU1FANtHU/929/MfAmNELOAmZQ0e4KcW3Ged8xXeK8QIN9BngNtoY2Z0tDARzi7sXJSNj1DW5njSakvmmnSPwGlRdsZ8FDCK63ACHcFm6uLM9FbbPv2QTxR0bogWCSXZRFOQJQIpLJBefmHLjBAbS2myxVx4JER35uxQgG9imr34F00Q++ESFi26gzWEX3D6Hq/FZWYDPgmVZD+BEl46vZVdP8nUS4BcBpCTYxUIlZtuPoHofFICk4kQGS4TS4y0Kqhwl1/hoeCEAQA50Z1kB277yKvc/CsB/lxrKA86cSxnlfGX4L5H89hQDadDDMY8lVBjDCxTUtbmQKkwjcBR6TgkF1+Y+e5z6RVzQCFAg/TcScx4y/6zhlXQUfY4Zkeo1qUhONQQ8EMLKKDL/mRunUJeAUX7h8c1b5Sal7IwhJ8wB2TDDsqHQBjqcAWFb1M/QOXqfPIX6mepQVLViZMOTjPPvkhbV6HG9BuWcAj3L6vki109ydweDNKFs6Fxqkjwh0tugM9DKg/qSjZNsSXP8ff8172TdnHRzwK2K/mIhMOX4YLjJNJr3B2mCIrmfDFPPbMlU5mpsdvm5LdZ77/vbBdiDvJmivgLERSrNKkJHf2xt9IJKejlkI+p5+j1J9AHvgvs0EFUTGQ==",
+    "expiration": "2026-05-16T23:47:15.000Z"
+  },
+  "name": "beverage_shop",
+  "path": "/home/ubuntu/beverage_shop",
+  "port": 3000,
+  "secrets": {
+    "BUILT_IN_FORGE_API_KEY": "iv4msbFkpPYFSK9zjQNm8g",
+    "BUILT_IN_FORGE_API_URL": "https://forge.manus.ai",
+    "JWT_SECRET": "N4SRt7dM2kkRaUuPYVtwoU",
+    "OAUTH_SERVER_URL": "https://api.manus.im",
+    "OWNER_NAME": "Rungkan Boonnattakorn",
+    "OWNER_OPEN_ID": "W7ZCD45iXd9UPE4yxsTZpw",
+    "STRIPE_SECRET_KEY": "sk_test_51TFXBbBeRK4q0INOd02OfG4BwKj6TRMuB2Gx4JYdO6M3H0dzUl8O8K9WstOzXkRlmikAVYkCCWkgTRschokvdAcb00hdDLxvj3",
+    "STRIPE_WEBHOOK_SECRET": "whsec_EFlrtOGPKpfqdLVuIf2drJtgMX3l78KT",
+    "VITE_ANALYTICS_ENDPOINT": "https://manus-analytics.com",
+    "VITE_ANALYTICS_WEBSITE_ID": "5b0bf0c4-e032-45ae-8447-45a9ec32040f",
+    "VITE_APP_ID": "YGoR3BS934bR93H6563cHY",
+    "VITE_APP_LOGO": "https://files.manuscdn.com/user_upload_by_module/web_dev_logo/310519663084993239/lBSuYneALKzfmiVG.png",
+    "VITE_APP_TITLE": "Beverage Shop - เว็บไซต์ขายเครื่องดื่ม",
+    "VITE_FRONTEND_FORGE_API_KEY": "PtH5ooRF66j6jmkUJgsBPq",
+    "VITE_FRONTEND_FORGE_API_URL": "https://forge.manus.ai",
+    "VITE_OAUTH_PORTAL_URL": "https://manus.im",
+    "VITE_STRIPE_PUBLISHABLE_KEY": "pk_test_51TFXBbBeRK4q0INO1Z21Av0kUIzzqdmqeRJoyrOEsBlITnTzyBp2jUG4p7epHeBXeWomVszJ6Geyl191kapIrx9e00RF7l70IF"
+  },
+  "template_id": "web-db-user",
+  "test_command": "pnpm test"
+}
