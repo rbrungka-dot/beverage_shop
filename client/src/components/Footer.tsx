@@ -40,16 +40,38 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Legal */}
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">
-              ติดต่อ
+              นโยบาย
             </h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>อีเมล: admin@bienvica.com</li>
-              <li>โทร: +66 64 654 0592</li>
-              <li>เวลาทำการ: จันทร์–ศุกร์ 9:00–18:00</li>
+            <ul className="space-y-2">
+              {[
+                { href: "/refund-policy", label: "นโยบายการคืนเงิน" },
+                { href: "/terms-of-service", label: "ข้อตกลงการใช้บริการ" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors no-underline"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
+            <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+              <p>อีเมล: thanakrittum@gmail.com</p>
+              <p>โทร: 064 654 0592</p>
+              <a
+                href="https://www.facebook.com/profile.php?id=61578488837019"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                Facebook: Bienvica เบียงวิก้า
+              </a>
+            </div>
           </div>
         </div>
 
