@@ -145,3 +145,12 @@
 ## Brand Ecosystem Update (Round 11)
 - [x] ลบประโยค 0% alc. ออกจาก hero section และ feature card ในหน้าแรก
 - [x] เพิ่ม Coming Soon section ในหน้าแรก — Gummies (Daily Balance) และ Shot (Instant Reset) พร้อม notify form
+
+## Product Update Round 12 (May 2026)
+- [ ] ลบสินค้าที่ขีดฆ่า: แพ็ค 6 ขวด (id=2), แพ็ค 24 ขวด (id=30001), Subscription รายเดือน (id=30002), Premium Gift Box (id=30003), Starter Kit (id=30004)
+- [ ] อัปเดตราคา: 1 ขวด = 240 บาท, 12 ขวด = 2,400 บาท, Gift Set 6 ขวด = 1,500 บาท
+- [ ] เพิ่มสินค้าใหม่: Morning Veil Shot 50ml ราคา 40 บาท (category: Beyond Cider™)
+- [ ] เพิ่มสินค้าใหม่: Gummy Afternoon Awake (ซองเขียว) 6 เม็ด 59 บาท
+- [ ] เพิ่มสินค้าใหม่: Gummy Midnight Rose (ซองชมพู) 6 เม็ด 59 บาท
+- [ ] อัปโหลดรูปภาพสินค้าใหม่จากไฟล์ที่แนบ
+- [ ] อัปเดตรูปภาพและคำบรรยายสินค้าใน database

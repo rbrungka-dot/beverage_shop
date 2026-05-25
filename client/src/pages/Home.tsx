@@ -468,6 +468,140 @@ export default function Home() {
       {/* Gold divider */}
       <div className="gold-divider mx-auto max-w-3xl" />
 
+      {/* Science & Benefits Section */}
+      <section className="py-20 bg-gradient-to-b from-background to-muted/20">
+        <div className="container">
+          <div className="text-center mb-14">
+            <span className="inline-block text-xs font-medium text-accent uppercase tracking-[0.2em] border border-accent/30 rounded-full px-4 py-1.5 mb-4">
+              Science-Backed Formula
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-3">
+              3 ชั้นปกป้อง — ก่อนออกไปเผชิญวัน
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              ทุกเช้า ร่างกายต้องรับมือกับ Free Radicals ที่สะสมระหว่างนอนหลับ เมื่ออายุมากขึ้น CoQ10 ลดลง ทำให้เกิด Brain Fog และแสงแดดยิ่งเพิ่ม Oxidative Stress
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-16">
+            {/* Active Phenolic Compounds */}
+            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm text-center">
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                <FlaskConical className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-serif text-lg font-semibold text-foreground mb-2">Active Phenolic Compounds</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">ลดการอักเสบในระบบประสาท เคลียร์สมองให้โล่ง ลดความล้าสะสมที่สะสมจากการทำงานหนักและความเครียด</p>
+            </div>
+            {/* CoQ10 */}
+            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm text-center">
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                <Sparkles className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-serif text-lg font-semibold text-foreground mb-2">CoQ10</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">สนับสนุนพลังงาน ATP ให้เซลล์สมองและร่างกาย ช่วยฟื้นฟูพลังงานที่สูญหายไปตามอายุ ทำให้รู้สึกตื่นตัวและมีสมาธิมากขึ้น</p>
+            </div>
+            {/* Rose Antioxidant */}
+            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm text-center">
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                <Flower2 className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-serif text-lg font-semibold text-foreground mb-2">Rose Antioxidant Extract</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">สร้าง Inner Shield ปกป้องเซลล์จากมลภาวะ ฟื้นฟูผิวให้อ่อนใสและสดใสจากภายใน ผลิตจากกุหลาบมอญแห่งสกลนคร</p>
+            </div>
+          </div>
+
+          {/* Gummy Product Highlight */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Afternoon Awake */}
+            <div className="bg-gradient-to-br from-[#e8f0e0] to-[#f5f8f0] dark:from-muted/30 dark:to-muted/10 rounded-2xl p-8 border border-border">
+              <div className="flex items-start gap-4 mb-5">
+                <div className="w-10 h-10 rounded-full bg-[#6b8c5a]/20 flex items-center justify-center flex-shrink-0">
+                  <Leaf className="h-5 w-5 text-[#6b8c5a]" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-[#6b8c5a] uppercase tracking-widest mb-0.5">Afternoon Awake — ซองเขียว</p>
+                  <h3 className="font-serif text-xl font-semibold text-foreground">Nopal Cactus Gummy</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">Nopal + Magnesium Malate + Green Apple</p>
+                </div>
+              </div>
+              <ul className="space-y-2.5 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2"><span className="text-[#6b8c5a] font-bold mt-0.5">✓</span>ปลุกสมองล้า คลายปวดเมื่อยบ่าไหล่</li>
+                <li className="flex items-start gap-2"><span className="text-[#6b8c5a] font-bold mt-0.5">✓</span>สนับสนุน GLP-1 คุมหิวอิ่มนาน พลังงานต่อเนื่อง</li>
+                <li className="flex items-start gap-2"><span className="text-[#6b8c5a] font-bold mt-0.5">✓</span>คุมสมดุลน้ำตาล ลดอาการง่วงนอนหลังมื้อเที่ยง</li>
+                <li className="flex items-start gap-2"><span className="text-[#6b8c5a] font-bold mt-0.5">✓</span>0% Sugar Added · 6 เม็ด/ซอง</li>
+              </ul>
+              <p className="mt-5 text-lg font-semibold text-foreground">59 บาท</p>
+            </div>
+
+            {/* Midnight Rose */}
+            <div className="bg-gradient-to-br from-[#f5e8ed] to-[#fdf5f7] dark:from-muted/30 dark:to-muted/10 rounded-2xl p-8 border border-border">
+              <div className="flex items-start gap-4 mb-5">
+                <div className="w-10 h-10 rounded-full bg-[#c07a8a]/20 flex items-center justify-center flex-shrink-0">
+                  <Flower2 className="h-5 w-5 text-[#c07a8a]" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-[#c07a8a] uppercase tracking-widest mb-0.5">Midnight Rose — ซองชมพู</p>
+                  <h3 className="font-serif text-xl font-semibold text-foreground">Nopal Cactus Gummy</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">Nopal + Magnesium Bisglycinate + Rosa damascena</p>
+                </div>
+              </div>
+              <ul className="space-y-2.5 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2"><span className="text-[#c07a8a] font-bold mt-0.5">✓</span>ผ่อนคลายระบบประสาท ลดความตึงเครียดของกล้ามเนื้อ</li>
+                <li className="flex items-start gap-2"><span className="text-[#c07a8a] font-bold mt-0.5">✓</span>สนับสนุน GABA หลับลึกและยาวนานขึ้น</li>
+                <li className="flex items-start gap-2"><span className="text-[#c07a8a] font-bold mt-0.5">✓</span>อโรมากุหลาบช่วยให้ใจสงบ ฟื้นฟูผิวขณะนอนหลับ</li>
+                <li className="flex items-start gap-2"><span className="text-[#c07a8a] font-bold mt-0.5">✓</span>0% Sugar Added · 6 เม็ด/ซอง</li>
+              </ul>
+              <p className="mt-5 text-lg font-semibold text-foreground">59 บาท</p>
+            </div>
+          </div>
+
+          {/* Morning Veil Shot Highlight */}
+          <div className="mt-8 max-w-4xl mx-auto bg-gradient-to-r from-[#3a2a1a]/5 to-[#5a3a1a]/10 dark:from-muted/20 dark:to-muted/10 rounded-2xl p-8 border border-border">
+            <div className="flex flex-col md:flex-row items-start gap-6">
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 rounded-full bg-[#5a3a1a]/10 flex items-center justify-center">
+                  <Droplets className="h-6 w-6 text-[#5a3a1a] dark:text-accent" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-medium text-accent uppercase tracking-widest mb-1">Morning Veil Shot — 50ml Ready to Drink</p>
+                <h3 className="font-serif text-2xl font-semibold text-foreground mb-3">เตรียมร่างกายก่อนเริ่มวัน</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+                  <div className="text-center p-3 bg-background/60 rounded-xl">
+                    <p className="text-xs font-semibold text-foreground mb-1">ACV</p>
+                    <p className="text-xs text-muted-foreground">คุมสมดุลน้ำตาล</p>
+                  </div>
+                  <div className="text-center p-3 bg-background/60 rounded-xl">
+                    <p className="text-xs font-semibold text-foreground mb-1">Nopal</p>
+                    <p className="text-xs text-muted-foreground">สนับสนุน GLP-1</p>
+                  </div>
+                  <div className="text-center p-3 bg-background/60 rounded-xl">
+                    <p className="text-xs font-semibold text-foreground mb-1">Rose</p>
+                    <p className="text-xs text-muted-foreground">ฟื้นฟูผิวผุดผ่อง</p>
+                  </div>
+                  <div className="text-center p-3 bg-background/60 rounded-xl">
+                    <p className="text-xs font-semibold text-foreground mb-1">CoQ10</p>
+                    <p className="text-xs text-muted-foreground">พลังงานระดับเซลล์</p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">ผลิตจากงานวิจัยรังกราค RAINS for Semi-Industrial Food Valley ประจำปี 2568 สนับสนุนโดย สวก. — ทดสอบใน CaCo-2 intestinal cell model</p>
+                <div className="flex items-center gap-4">
+                  <p className="text-xl font-semibold text-foreground">40 บาท</p>
+                  <Link href="/products">
+                    <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6">
+                      สั่งซื้อเลย
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gold divider */}
+      <div className="gold-divider mx-auto max-w-3xl" />
+
       {/* Coming Soon — Gummies & Shot */}
       <section className="py-20 bg-gradient-to-b from-muted/40 to-background">
         <div className="container">
@@ -499,36 +633,44 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Gummies — Coming Soon */}
-            <div className="relative rounded-2xl border border-dashed border-border/60 bg-muted/30 p-8 text-center flex flex-col items-center gap-4">
+            {/* Gummies — Available */}
+            <div className="relative rounded-2xl border border-border bg-card p-8 text-center flex flex-col items-center gap-4 shadow-sm">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-accent text-accent-foreground text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Coming Soon
+                <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                  New
                 </span>
               </div>
-              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl opacity-60">🌿</div>
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">🌿</div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1">Balance</p>
-                <h3 className="font-serif text-xl font-semibold text-foreground/70">Daily Gummies</h3>
-                <p className="text-sm text-muted-foreground mt-2">Daily ritual สะสมผลระยะยาว ให้ร่างกาย balance ทุกวัน</p>
+                <p className="text-xs font-medium text-accent uppercase tracking-widest mb-1">Balance</p>
+                <h3 className="font-serif text-xl font-semibold text-foreground">Nopal Cactus Gummy</h3>
+                <p className="text-sm text-muted-foreground mt-2">2 รสชาติ — Afternoon Awake &amp; Midnight Rose ซองละ 6 เม็ด ดูแลคุณทั้งกลางวันและกลางคืน</p>
               </div>
-              <ComingSoonNotifyButton productName="Daily Gummies" />
+              <Link href="/products">
+                <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6">
+                  ดูสินค้า
+                </Button>
+              </Link>
             </div>
 
-            {/* Shot — Coming Soon */}
-            <div className="relative rounded-2xl border border-dashed border-border/60 bg-muted/30 p-8 text-center flex flex-col items-center gap-4">
+            {/* Morning Veil Shot — Available */}
+            <div className="relative rounded-2xl border border-border bg-card p-8 text-center flex flex-col items-center gap-4 shadow-sm">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-accent text-accent-foreground text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Coming Soon
+                <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                  New
                 </span>
               </div>
-              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl opacity-60">⚡</div>
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">⚡</div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1">Reset</p>
-                <h3 className="font-serif text-xl font-semibold text-foreground/70">Instant Shot</h3>
-                <p className="text-sm text-muted-foreground mt-2">Reset พลังงานหรือคืนความนิ่ง ตามสิ่งที่วันนั้นต้องการ</p>
+                <p className="text-xs font-medium text-accent uppercase tracking-widest mb-1">Reset</p>
+                <h3 className="font-serif text-xl font-semibold text-foreground">Morning Veil Shot</h3>
+                <p className="text-sm text-muted-foreground mt-2">50ml พร้อมดื่ม เตรียมร่างกายก่อนเริ่มวัน ACV · Nopal · Rose · CoQ10 ไม่มีน้ำตาลเพิ่ม</p>
               </div>
-              <ComingSoonNotifyButton productName="Instant Shot" />
+              <Link href="/products">
+                <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6">
+                  ดูสินค้า
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
