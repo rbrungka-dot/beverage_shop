@@ -20,7 +20,7 @@ import {
 import { orders as ordersTable, inquiries } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", { apiVersion: "2026-03-25.dahlia" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
@@ -265,23 +265,29 @@ export const appRouter = router({
           });
         }
 
-        const session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card", "promptpay"],
-          line_items: lineItems,
-          mode: "payment",
-          customer_email: ctx.user.email || undefined,
-          client_reference_id: ctx.user.id.toString(),
-          metadata: {
-            user_id: ctx.user.id.toString(),
-            order_id: orderId.toString(),
-            customer_email: ctx.user.email || "",
-            customer_name: ctx.user.name || "",
-          },
-          success_url: `${input.origin}/orders/${orderId}?success=true`,
-          cancel_url: `${input.origin}/cart?cancelled=true`,
-          allow_promotion_codes: true,
-          phone_number_collection: { enabled: false },
-        });
+        let session;
+        try {
+          session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card", "promptpay"],
+            line_items: lineItems,
+            mode: "payment",
+            customer_email: ctx.user.email || undefined,
+            client_reference_id: ctx.user.id.toString(),
+            metadata: {
+              user_id: ctx.user.id.toString(),
+              order_id: orderId.toString(),
+              customer_email: ctx.user.email || "",
+              customer_name: ctx.user.name || "",
+            },
+            success_url: `${input.origin}/orders/${orderId}?success=true`,
+            cancel_url: `${input.origin}/cart?cancelled=true`,
+            allow_promotion_codes: true,
+          });
+        } catch (stripeErr: unknown) {
+          const msg = stripeErr instanceof Error ? stripeErr.message : "Stripe error";
+          console.error("[Stripe] checkout.sessions.create failed:", msg);
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: msg });
+        }
 
         const db = await getDb();
         if (db) {
