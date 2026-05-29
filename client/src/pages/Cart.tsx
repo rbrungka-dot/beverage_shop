@@ -95,7 +95,10 @@ export default function Cart() {
   }
 
   const isEmpty = !cartItems || cartItems.length === 0;
-  const total = cartItems?.reduce((sum, item) => sum + parseFloat(item.productPrice || "0") * item.quantity, 0) ?? 0;
+  const itemsTotal = cartItems?.reduce((sum, item) => sum + parseFloat(item.productPrice || "0") * item.quantity, 0) ?? 0;
+  const hasGummy = cartItems?.some((item) => (item.productName || "").toLowerCase().includes("gummy")) ?? false;
+  const shippingFee = hasGummy ? 50 : 0;
+  const total = itemsTotal + shippingFee;
 
   const handleCheckout = () => {
     if (!shippingName.trim()) { toast.error("กรุณากรอกชื่อผู้รับ"); return; }
@@ -221,10 +224,14 @@ export default function Cart() {
                       <span>฿{(parseFloat(item.productPrice || "0") * item.quantity).toLocaleString("th-TH")}</span>
                     </div>
                   ))}
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>ค่าจัดส่ง</span>
+                    <span>{shippingFee > 0 ? `฿${shippingFee}` : "ฟรี"}</span>
+                  </div>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-semibold text-foreground">
-                  <span>ยอดรวม</span>
+                  <span>ยอดรวมทั้งหมด</span>
                   <span>฿{total.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
                 </div>
                 <Button

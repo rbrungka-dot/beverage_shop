@@ -212,7 +212,13 @@ export const appRouter = router({
         origin: z.string(),
       }))
       .mutation(async ({ input, ctx }) => {
-        const totalAmount = input.items.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0);
+        // ค่าขนส่ง: คิด 50 บาทถ้ามีสินค้า Gummy ในออเดอร์
+        const hasGummy = input.items.some((item) =>
+          item.name.toLowerCase().includes("gummy")
+        );
+        const shippingFee = hasGummy ? 50 : 0;
+        const itemsTotal = input.items.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0);
+        const totalAmount = itemsTotal + shippingFee;
 
         const orderId = await createOrder(
           {
@@ -232,19 +238,36 @@ export const appRouter = router({
           }))
         );
 
-        const session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card", "promptpay"],
-          line_items: input.items.map((item) => ({
+        const lineItems = input.items.map((item) => ({
+          price_data: {
+            currency: "thb",
+            product_data: {
+              name: item.name,
+              images: item.imageUrl ? [item.imageUrl] : [],
+            },
+            unit_amount: Math.round(parseFloat(item.price) * 100),
+          },
+          quantity: item.quantity,
+        }));
+
+        // เพิ่มรายการค่าขนส่งถ้ามี Gummy
+        if (shippingFee > 0) {
+          lineItems.push({
             price_data: {
               currency: "thb",
               product_data: {
-                name: item.name,
-                images: item.imageUrl ? [item.imageUrl] : [],
+                name: "ค่าจัดส่ง",
+                images: [],
               },
-              unit_amount: Math.round(parseFloat(item.price) * 100),
+              unit_amount: shippingFee * 100,
             },
-            quantity: item.quantity,
-          })),
+            quantity: 1,
+          });
+        }
+
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card", "promptpay"],
+          line_items: lineItems,
           mode: "payment",
           customer_email: ctx.user.email || undefined,
           client_reference_id: ctx.user.id.toString(),
