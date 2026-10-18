@@ -4,6 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getStorage } from 'firebase-admin/storage';
 import Stripe from 'stripe';
 import { randomUUID } from 'node:crypto';
+import { importBienvicaCatalog } from '../../shared/bienvica-catalog.mjs';
 import { HttpError, requireValue, text, validateCheckout, quoteProducts, fingerprint, orderToken, validOrderToken, paymentAction } from '../../shared/commerce.mjs';
 
 function services(){
@@ -121,6 +122,9 @@ export default async function handler(req){
     if(path==='/admin/product'&&req.method==='POST'){
       const b=await body(req);requireValue(['Bienvica','B-time','Xactu-X'].includes(b.brand));requireValue(b.priceSatang===null||Number.isSafeInteger(b.priceSatang)&&b.priceSatang>0);requireValue(b.stock===null||Number.isSafeInteger(b.stock)&&b.stock>=0);const image=text(b.image||'',2000,false);requireValue(!image||image.startsWith('/assets/')||/^https:\/\/firebasestorage\.googleapis\.com\//.test(image));
       const data={name:text(b.name,200),brand:b.brand,description:text(b.description||'',4000,false),instructions:text(b.instructions||'',2000,false),priceSatang:b.priceSatang,stock:b.stock,active:b.active===true,image};await db.doc('products/'+docId(b.id||randomUUID())).set(data,{merge:true});return json({success:true});
+    }
+    if(path==='/admin/import-bienvica'&&req.method==='POST'){
+      return json({success:true,...await importBienvicaCatalog(db,u.uid)});
     }
     if(path==='/admin/settings'&&req.method==='POST'){const b=await body(req);requireValue(Number.isSafeInteger(b.shippingFeeSatang)&&b.shippingFeeSatang>=0);await db.doc('settings/shop').set({shippingFeeSatang:b.shippingFeeSatang});return json({success:true});}
     if(path==='/admin/shipping'&&req.method==='POST'){

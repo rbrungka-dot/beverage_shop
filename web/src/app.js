@@ -1,5 +1,6 @@
 import { api, demo, observeAuth, login, register, google, logout, resetPassword, upload } from './services.js';
 import { sections as defaults } from '../shared/initial.mjs';
+import { bienvicaCatalog } from '../shared/bienvica-catalog.mjs';
 const app=document.querySelector('#app');
 export const escapeHTML=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const e=escapeHTML;
@@ -64,6 +65,10 @@ async function adminPage(tab='pages',params){if(!user?.admin)return empty('เ�
  else if(tab==='community')content=`<h1>ดูแลวงสนทนา</h1><h2 class="info">รอตรวจสอบ</h2>${[...adminData.posts.filter(p=>p.status==='pending').map(p=>({...p,collection:'posts'})),...adminData.comments.map(c=>({...c,collection:'comments'}))].map(p=>`<article class="admin-list"><h3>${e(p.title||'ความคิดเห็น')}</h3><p>${e(p.body)}</p><div class="row"><button data-action="moderate" data-collection="${p.collection}" data-id="${e(p.id)}" data-status="published">อนุมัติ</button><button data-action="moderate" data-collection="${p.collection}" data-id="${e(p.id)}" data-status="rejected">ไม่เผยแพร่</button></div></article>`).join('')||'<p class="small">ไม่มีรายการรอตรวจสอบ</p>'}<form id="team-post" class="info"><h2>ลงเรื่องจากทีม</h2>${field('หัวข้อ','title','','text','required maxlength="200"')}<label>หมวด<select name="kind">${Object.entries(categories).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label><label>แบรนด์<select name="brand"><option value="all">ทุกแบรนด์</option>${brands.map(b=>`<option>${b}</option>`).join('')}</select></label><label>เนื้อหา<textarea name="body" required maxlength="6000"></textarea></label><button class="primary">เผยแพร่เรื่องจากทีม</button></form><form id="poll-form" class="info"><h2>สร้างโหวต</h2>${field('คำถาม','title','','text','required maxlength="200"')}<label>ตัวเลือก หนึ่งบรรทัดต่อหนึ่งข้อ<textarea name="options" required placeholder="ตัวเลือกแรก&#10;ตัวเลือกที่สอง"></textarea></label><button>เปิดกิจกรรมโหวต</button></form>`;
  else if(tab==='members'){const members=await api('/admin/members');content=`<h1>สมาชิกและทีมงาน</h1><p class="small">ผู้ดูแลใช้สิทธิ์ Firebase custom claim ตั้งจากเครื่องผู้ดูแลเท่านั้น สมาชิกยกระดับสิทธิ์ตัวเองไม่ได้</p>${members.map(m=>`<article class="admin-list"><h3>${e(m.name||'สมาชิก')}</h3><p>${e(m.email)} · ${m.admin?'ผู้ดูแล':'สมาชิก'}${m.disabled?' · ปิดใช้งาน':''}</p></article>`).join('')}`;}
  else content='<h1>ไม่พบเมนู</h1>';
+ if(tab==='products'&&!params.has('id')){
+  const complete=bienvicaCatalog.every(p=>adminData.products.some(existing=>existing.id===p.id));
+  content=`<section class="catalog-import summary"><h2>นำเข้าสินค้าเบียงวิก้าเดิม</h2><p>เฉพาะขวดเดี่ยว 240 บาท · แพ็ค 12 ขวด 2,400 บาท · Gift Set 6 ขวด 1,500 บาท</p><p class="small">สต็อกชั่วคราวรายการละ 100 หน่วย (ขวด / แพ็ค / ชุด) ใช้ภาพฉลากที่มีอยู่ก่อน และแก้ไขรูปได้ในแต่ละรายการ การกดซ้ำจะข้ามรายการที่มีอยู่</p><button id="import-bienvica" class="primary" ${complete?'disabled':''}>${complete?'นำเข้าครบแล้ว':'นำเข้าเบียงวิก้า 3 รายการ'}</button></section>`+content;
+ }
  return `<div class="admin-shell"><nav class="admin-nav" aria-label="เมนูหลังบ้าน">${Object.entries({pages:'หน้าเว็บและรูปภาพ',products:'สินค้า',orders:'คำสั่งซื้อ',community:'วงสนทนา',members:'สมาชิกและทีมงาน'}).map(([id,label])=>`<a href="#/admin/${id}" class="${id===tab?'active':''}">${label}</a>`).join('')}</nav><section class="admin-main">${content}</section></div>`;
 }
 async function refresh(){const result=await api('/bootstrap');data={...result,content:result.content||defaults};loaded=true;loadError='';}
@@ -87,5 +92,16 @@ app.addEventListener('submit',async event=>{event.preventDefault();if(busy)retur
  default:if(form.classList.contains('shipping-form')){await api('/admin/shipping',{method:'POST',data:{id:form.dataset.id,...values}});await render();toast('บันทึกการจัดส่งแล้ว');}
  }
  }catch(error){toast(error.message)}finally{busy=false;if(button?.isConnected)button.disabled=false;}});
+app.addEventListener('click',async event=>{
+ const button=event.target.closest('#import-bienvica');
+ if(!button||busy||!user?.admin)return;
+ busy=true;button.disabled=true;
+ try{
+  const result=await api('/admin/import-bienvica',{method:'POST',data:{}});
+  await refresh();await render();
+  toast(`นำเข้า ${result.created.length} รายการ · มีอยู่แล้ว ${result.skipped.length} รายการ`);
+ }catch(error){toast(error.message);if(button.isConnected)button.disabled=false;}
+ finally{busy=false;}
+});
 window.addEventListener('hashchange',()=>{render();window.scrollTo({top:0,behavior:'instant'})});
 observeAuth(u=>{user=u;render();}).catch(error=>{toast('ระบบสมาชิกยังไม่พร้อม: '+error.message);render()});

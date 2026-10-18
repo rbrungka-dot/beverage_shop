@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { sections, products, posts, demoPoll } from '../shared/initial.mjs';
+import { bienvicaCatalog } from '../shared/bienvica-catalog.mjs';
 export const config=window.BIENVICA_CONFIG||{mode:'demo',firebase:{}};
 export const demo=config.mode!=='live';
 let auth,storage,currentUser=null;
@@ -35,6 +36,14 @@ export async function api(path,{method='GET',data}={}){
 async function demoApi(path,method,data){
  if(path==='/bootstrap')return clone({content:memory.content,products:memory.products.filter(p=>p.active),posts:memory.posts.filter(p=>p.status==='published'),poll:memory.poll});
  if(path==='/checkout')throw Error('โหมดทดลองยังไม่รับชำระเงิน ต้องเชื่อม Firebase และ Stripe ก่อน');
+ if(path==='/admin/import-bienvica'){
+  const created=[],skipped=[];
+  for(const product of bienvicaCatalog){
+   if(memory.products.some(p=>p.id===product.id))skipped.push(product.id);
+   else {memory.products.push(clone(product));created.push(product.id);}
+  }
+  persist();return {success:true,created,skipped};
+ }
  if(path==='/admin/data')return clone(memory);
  if(path==='/admin/content'){memory.draft=clone(data.sections);if(data.publish)memory.content=clone(data.sections);}
  else if(path==='/admin/product'){const i=memory.products.findIndex(p=>p.id===data.id);if(i>=0)memory.products[i]=clone(data);else memory.products.push({...clone(data),id:crypto.randomUUID()});}
