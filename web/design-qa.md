@@ -45,3 +45,17 @@ Interactions: About navigation, timeline anchor, mobile menu, two-item demo impo
 No actionable P0/P1/P2 findings. First substantive visual comparison passed; no visual correction cycle required. The stage photo was not regenerated: authentic booth photo is used instead, as permitted by the user. Existing orders remain intact. Gift Set remains in historical/admin records but cannot appear in storefront or be quoted for a new checkout, even if its old active flag remains true.
 
 Generated assets: web/public/assets/bienvica-single.webp and bienvica-twelve.webp, built-in image generation. Prompt set: faithful slender Bienvica 250 mL rosé bottle with pink foil, brown seal, cream copper botanical label; warm ivory studio background, soft window light, no props or advertising captions. Single image contains exactly one bottle; pack contains exactly twelve bottles in three rows of four. Reference: user supplied IMG_6230.jpeg; twelve-bottle image references the selected generated single-bottle image. Tiny label details in generated catalogue illustrations are not a substitute for the physical label.
+
+# Scoped award mark revision — 2026-10-18
+
+final result: passed
+
+User directs removal of logo background, replacement of person/award photograph with that logo, and Arabic numerals throughout. Product Design scoped-edit workflow preserves surrounding page design.
+
+Source: supplied IMG_6231.jpeg and existing award panel captured in /workspace/scratch/bienvica-award-before-mark.jpg. Implementation: /workspace/scratch/bienvica-award-mark-preview.jpg. Combined visual comparison: /workspace/scratch/bienvica-award-mark-comparison.jpg. Both desktop captures are 1363×936 CSS pixels, density 1, equally normalized to 800px wide; award section height intentionally shrinks after removing photograph/caption and duplicate miniature emblem.
+
+Fonts/typography: existing local Noto Sans Thai retained; year reads 2569 / 2026, no Thai numerals in app source. Spacing/layout: same two-column sage panel, large contained mark left, text right; mobile stacks without overflow (390×844 iframe, document client/scroll width both 375). Colors: existing sage and forest green; gold/orange artwork from supplied emblem. Imagery: built-in image edit removed white to genuine alpha transparency; transparent WebP saved losslessly at web/public/assets/quality-award-2026-transparent.webp. Original Thai/English words, category and 2026 checked visually at full viewport and on mobile; no white rectangle. Copy/content: award information unchanged, duplicate seal and photograph caption removed. Focused native-size award screenshot used for lettering and alpha-edge review.
+
+Build passes; browser console has no app errors, one extension metadata error excluded. Existing navigation retained. No actionable P0/P1/P2 findings. Scoped change passed first comparison without correction cycle; backend unchanged.
+
+Image prompt (built-in imagegen): background-extraction of supplied official orange-gold Quality Award 2026 emblem; remove only white outside/inside mark and letter counters to alpha; preserve all Thai and English lettering, numerals, proportions, original layout/top caption; no redesign/retyping/recoloring/shadows. Input IMG_6231.jpeg; generated output exec-c7f819b0-509e-4409-9312-e32d5fd9caa5.png; production asset as above.
