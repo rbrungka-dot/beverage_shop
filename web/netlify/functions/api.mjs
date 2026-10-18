@@ -4,7 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getStorage } from 'firebase-admin/storage';
 import Stripe from 'stripe';
 import { randomUUID } from 'node:crypto';
-import { importBienvicaCatalog } from '../../shared/bienvica-catalog.mjs';
+import { importBienvicaCatalog, isSellableProduct, presentProduct, discontinuedProductIds } from '../../shared/bienvica-catalog.mjs';
 import { HttpError, requireValue, text, validateCheckout, quoteProducts, fingerprint, orderToken, validOrderToken, paymentAction } from '../../shared/commerce.mjs';
 
 function services(){
@@ -91,7 +91,7 @@ export default async function handler(req){
     const {db,auth}=services();
     if(path==='/bootstrap'&&req.method==='GET'){
       const [content,products,posts,polls]=await Promise.all([db.doc('content/published').get(),db.collection('products').where('active','==',true).get(),db.collection('posts').where('status','==','published').limit(100).get(),db.collection('polls').where('active','==',true).limit(1).get()]);
-      return json({content:content.exists?content.data().sections:null,products:products.docs.map(d=>({id:d.id,...d.data()})),posts:posts.docs.map(d=>({id:d.id,...d.data()})),poll:polls.docs[0]?{id:polls.docs[0].id,...polls.docs[0].data()}:null});
+      return json({content:content.exists?content.data().sections:null,products:products.docs.map(d=>({id:d.id,...d.data()})).filter(isSellableProduct).map(presentProduct),posts:posts.docs.map(d=>({id:d.id,...d.data()})),poll:polls.docs[0]?{id:polls.docs[0].id,...polls.docs[0].data()}:null});
     }
     const orderMatch=path.match(/^\/orders\/([\w-]+)$/);
     if(orderMatch&&req.method==='GET'){
@@ -114,13 +114,13 @@ export default async function handler(req){
     if(!path.startsWith('/admin/'))throw new HttpError(404,'ไม่พบรายการ');const u=await admin(req);
     if(path==='/admin/data'&&req.method==='GET'){
       const [draft,products,orders,posts,comments,settings]=await Promise.all([db.doc('content/draft').get(),db.collection('products').get(),db.collection('orders').orderBy('createdAt','desc').limit(100).get(),db.collection('posts').limit(200).get(),db.collection('comments').where('status','==','pending').limit(100).get(),db.doc('settings/shop').get()]);
-      return json({draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:settings.data()||{shippingFeeSatang:null}});
+      return json({draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})).map(presentProduct),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:settings.data()||{shippingFeeSatang:null}});
     }
     if(path==='/admin/content'&&req.method==='POST'){
       const b=await body(req),sections=safeContent(b.sections);const record={sections,updatedBy:u.uid,updatedAt:new Date().toISOString()};const batch=db.batch();batch.set(db.doc('content/draft'),record);if(b.publish===true)batch.set(db.doc('content/published'),record);await batch.commit();return json({success:true});
     }
     if(path==='/admin/product'&&req.method==='POST'){
-      const b=await body(req);requireValue(['Bienvica','B-time','Xactu-X'].includes(b.brand));requireValue(b.priceSatang===null||Number.isSafeInteger(b.priceSatang)&&b.priceSatang>0);requireValue(b.stock===null||Number.isSafeInteger(b.stock)&&b.stock>=0);const image=text(b.image||'',2000,false);requireValue(!image||image.startsWith('/assets/')||/^https:\/\/firebasestorage\.googleapis\.com\//.test(image));
+      const b=await body(req);requireValue(!discontinuedProductIds.includes(b.id)||b.active!==true,'สินค้านี้เลิกจำหน่ายแล้ว');requireValue(['Bienvica','B-time','Xactu-X'].includes(b.brand));requireValue(b.priceSatang===null||Number.isSafeInteger(b.priceSatang)&&b.priceSatang>0);requireValue(b.stock===null||Number.isSafeInteger(b.stock)&&b.stock>=0);const image=text(b.image||'',2000,false);requireValue(!image||image.startsWith('/assets/')||/^https:\/\/firebasestorage\.googleapis\.com\//.test(image));
       const data={name:text(b.name,200),brand:b.brand,description:text(b.description||'',4000,false),instructions:text(b.instructions||'',2000,false),priceSatang:b.priceSatang,stock:b.stock,active:b.active===true,image};await db.doc('products/'+docId(b.id||randomUUID())).set(data,{merge:true});return json({success:true});
     }
     if(path==='/admin/import-bienvica'&&req.method==='POST'){

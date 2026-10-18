@@ -1,3 +1,4 @@
+import { isSellableProduct } from './bienvica-catalog.mjs';
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 export class HttpError extends Error { constructor(status,message){super(message);this.status=status;} }
 export function requireValue(ok,message='ข้อมูลไม่ถูกต้อง'){if(!ok)throw new HttpError(400,message);}
@@ -12,7 +13,7 @@ export function validateCheckout(body){
 }
 export function quoteProducts(items,products,shippingFee){
   requireValue(Number.isSafeInteger(shippingFee)&&shippingFee>=0,'ยังไม่ได้กำหนดค่าจัดส่ง');
-  const lines=items.map(i=>{const p=products.find(p=>p.id===i.productId);requireValue(p&&p.active===true,'สินค้าไม่พร้อมจำหน่าย');requireValue(Number.isSafeInteger(p.priceSatang)&&p.priceSatang>0,'ยังไม่ได้กำหนดราคาสินค้า');requireValue(Number.isSafeInteger(p.stock)&&p.stock>=i.quantity,'สินค้าไม่เพียงพอ');return{productId:p.id,name:p.name,quantity:i.quantity,priceSatang:p.priceSatang};});
+  const lines=items.map(i=>{const p=products.find(p=>p.id===i.productId);requireValue(isSellableProduct(p),'สินค้าไม่พร้อมจำหน่าย');requireValue(Number.isSafeInteger(p.priceSatang)&&p.priceSatang>0,'ยังไม่ได้กำหนดราคาสินค้า');requireValue(Number.isSafeInteger(p.stock)&&p.stock>=i.quantity,'สินค้าไม่เพียงพอ');return{productId:p.id,name:p.name,quantity:i.quantity,priceSatang:p.priceSatang};});
   const subtotal=lines.reduce((sum,p)=>sum+p.quantity*p.priceSatang,0),total=subtotal+shippingFee;requireValue(Number.isSafeInteger(total)&&total<=100000000,'ยอดรวมไม่ถูกต้อง');return{lines,subtotal,shippingFee,total,currency:'thb'};
 }
 export const fingerprint=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');

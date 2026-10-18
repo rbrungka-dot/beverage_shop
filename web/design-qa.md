@@ -23,3 +23,25 @@ Concept 1 is the layout target, with the editorial hierarchy of concept 3. User 
 Existing 12 tests pass, including brand filtering/cart quantities and private admin drafts/publishing. Browser verified B-time brand link and mobile menu. No application errors observed; one extension metadata error is external to the app. Live Google authentication was not re-run; auth and server adapters are unchanged. Supporting image conversion reduced transfer size; generated image art direction is illustrative.
 
 No P0/P1/P2 issues remain. Minor difference from image target: original person and photograph, actual logos, longer approved copy and retained origin strip require taller opening proportions; these are deliberate user/content constraints.
+
+# About page and current range — 2026-10-18
+
+final result: passed
+
+Target: extend the existing approved homepage design system to About, retaining the real owner and supplied award photographs. This is a page extension, not a pixel clone of the homepage. Intentional differences: equal hero columns, longer story, award feature and four dated milestones.
+
+Evidence:
+- Source visual: /workspace/scratch/bienvica-story-style-reference.jpg (existing home design).
+- Implementation: /workspace/scratch/bienvica-about-hero.jpg and /workspace/scratch/bienvica-about-award.jpg.
+- Combined comparison: /workspace/scratch/bienvica-about-comparison.jpg, home and About opening regions at the same 1363×936 CSS viewport, density 1, normalized equally to 900px wide. Header account state differs because the demo admin was used during verification; no design finding attributed to that state.
+- Focused award region inspected at native viewport size: complete authentic owner photo, readable award title/category, original supplied emblem; no face generation or retouching.
+- Mobile: iframe 390×844; usable document width 375px after scrollbar, scroll width 375px. Menu expanded and closed, story title and body readable without overflow. Hero and award layouts stack.
+- Product detail: generated twelve-bottle asset loaded at natural width 1200px; visually counted 4+4+4 bottles. Single-bottle asset inspected before integration. Legacy image replacements preserve price and stock; custom admin photographs take precedence.
+
+Required surfaces: local Noto Sans Thai typography and weights retained; generous ivory/green spacing and thin rules match home; sage award panel and muted gold year add hierarchy; originals compressed for delivery with no face edits; dates/category copied from user supplied materials. No new medical benefit claims added.
+
+Interactions: About navigation, timeline anchor, mobile menu, two-item demo import and product detail. Application console errors: none observed; browser extension metadata errors excluded. Sixteen tests pass, including discontinued-product checkout rejection, preservation of stock/price and custom photographs, cart behavior and private CMS drafts. Build passes.
+
+No actionable P0/P1/P2 findings. First substantive visual comparison passed; no visual correction cycle required. The stage photo was not regenerated: authentic booth photo is used instead, as permitted by the user. Existing orders remain intact. Gift Set remains in historical/admin records but cannot appear in storefront or be quoted for a new checkout, even if its old active flag remains true.
+
+Generated assets: web/public/assets/bienvica-single.webp and bienvica-twelve.webp, built-in image generation. Prompt set: faithful slender Bienvica 250 mL rosé bottle with pink foil, brown seal, cream copper botanical label; warm ivory studio background, soft window light, no props or advertising captions. Single image contains exactly one bottle; pack contains exactly twelve bottles in three rows of four. Reference: user supplied IMG_6230.jpeg; twelve-bottle image references the selected generated single-bottle image. Tiny label details in generated catalogue illustrations are not a substitute for the physical label.
