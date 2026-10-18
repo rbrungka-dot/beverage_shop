@@ -137,3 +137,9 @@ Import repository `rbrungka-dot/beverage_shop` เลือก branch ที่�
 ## โครงสร้าง
 
 `src/` หน้าเว็บและ adapter, `shared/` ข้อมูลเริ่มต้นและกฎเงิน, `netlify/functions/` API และ reconciliation, `public/assets/` โลโก้และรูป, `scripts/` build/seed/admin, `tests/` automated tests
+
+## Shipping rate approved 18 October 2026
+
+Current shipping is 50 THB per order, regardless of quantity or sellable unit. The shared shipping policy supplies the same rate to the public bootstrap, cart/checkout display and server-side quote. Unconfirmed legacy settings use the newly approved 50 THB rate. Later authenticated admin changes save the current policy version and take effect on new orders. Existing orders retain their recorded amounts. Only public fee information is exposed, never Stripe keys. Payment remains disabled until Stripe is connected and verified.
+
+Validation: 18 tests pass, including legacy-rate migration and one shipping fee across mixed products/quantities. Browser verified three single bottles: 720 THB subtotal + 50 THB shipping = 770 THB in cart and checkout. No checkout order or payment was submitted.

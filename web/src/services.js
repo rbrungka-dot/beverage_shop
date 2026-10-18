@@ -1,3 +1,4 @@
+import { shippingFeeSatang, SHIPPING_POLICY_VERSION } from '../shared/shipping.mjs';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -34,7 +35,7 @@ export async function api(path,{method='GET',data}={}){
  const response=await fetch('/api'+path,{method,headers,body:data===undefined?undefined:JSON.stringify(data)});let result;try{result=await response.json()}catch{throw Error('เชื่อมต่อระบบไม่ได้ กรุณาลองใหม่')};if(!response.ok)throw Error(result.error||'เกิดข้อผิดพลาด');return result;
 }
 async function demoApi(path,method,data){
- if(path==='/bootstrap')return clone({content:memory.content,products:memory.products.filter(p=>p.active),posts:memory.posts.filter(p=>p.status==='published'),poll:memory.poll});
+ if(path==='/bootstrap')return clone({shippingFeeSatang:shippingFeeSatang(memory.settings),content:memory.content,products:memory.products.filter(p=>p.active),posts:memory.posts.filter(p=>p.status==='published'),poll:memory.poll});
  if(path==='/checkout')throw Error('โหมดทดลองยังไม่รับชำระเงิน ต้องเชื่อม Firebase และ Stripe ก่อน');
  if(path==='/admin/import-bienvica'){
   const created=[],skipped=[];
@@ -44,10 +45,10 @@ async function demoApi(path,method,data){
   }
   persist();return {success:true,created,skipped};
  }
- if(path==='/admin/data')return clone(memory);
+ if(path==='/admin/data')return clone({...memory,settings:{...memory.settings,shippingFeeSatang:shippingFeeSatang(memory.settings)}});
  if(path==='/admin/content'){memory.draft=clone(data.sections);if(data.publish)memory.content=clone(data.sections);}
  else if(path==='/admin/product'){const i=memory.products.findIndex(p=>p.id===data.id);if(i>=0)memory.products[i]=clone(data);else memory.products.push({...clone(data),id:crypto.randomUUID()});}
- else if(path==='/admin/settings')memory.settings=clone(data);
+ else if(path==='/admin/settings')memory.settings={...clone(data),shippingPolicyVersion:SHIPPING_POLICY_VERSION};
  else if(path==='/posts'){memory.posts.unshift({...clone(data),id:crypto.randomUUID(),status:'pending',authorName:'สมาชิกตัวอย่าง',createdAt:new Date().toISOString()});}
  else if(path==='/admin/post'){memory.posts.unshift({...clone(data),id:crypto.randomUUID(),status:data.publish?'published':'draft',authorName:'ทีมจากสวนของเรา',createdAt:new Date().toISOString()});}
  else if(path==='/admin/moderate'){const p=memory[data.collection].find(p=>p.id===data.id);if(p)p.status=data.status;}

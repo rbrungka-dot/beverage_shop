@@ -1,3 +1,4 @@
+import { shippingFeeSatang, SHIPPING_POLICY_VERSION } from '../../shared/shipping.mjs';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
@@ -31,7 +32,7 @@ async function checkout(req){
   const orderRef=db.doc('orders/'+data.checkoutId),hash=fingerprint({items:data.items,shipping:data.shipping,uid:user?.uid||null});
   let order=await db.runTransaction(async t=>{
     const old=await t.get(orderRef);if(old.exists){const o=old.data();if(o.fingerprint!==hash)throw new HttpError(409,'คำขอสั่งซื้อเปลี่ยนไป กรุณาเริ่มใหม่');if(o.reservation!=='held'||o.paymentStatus!=='pending')throw new HttpError(409,'คำสั่งซื้อนี้ปิดแล้ว');return o;}
-    const settings=(await t.get(db.doc('settings/shop'))).data();const refs=data.items.map(i=>db.doc('products/'+i.productId));const docs=await t.getAll(...refs);const quote=quoteProducts(data.items,docs.map(d=>({id:d.id,...d.data()})),settings?.shippingFeeSatang);
+    const settings=(await t.get(db.doc('settings/shop'))).data();const refs=data.items.map(i=>db.doc('products/'+i.productId));const docs=await t.getAll(...refs);const quote=quoteProducts(data.items,docs.map(d=>({id:d.id,...d.data()})),shippingFeeSatang(settings));
     const o={id:data.checkoutId,uid:user?.uid||null,fingerprint:hash,...quote,shipping:data.shipping,paymentStatus:'pending',fulfillmentStatus:'unfulfilled',reservation:'held',checkoutExpiresAt:Math.floor(Date.now()/1000)+3600,createdAt:new Date().toISOString()};
     docs.forEach((d,i)=>t.update(d.ref,{stock:d.data().stock-data.items[i].quantity}));t.create(orderRef,o);return o;
   });
@@ -90,8 +91,8 @@ export default async function handler(req){
     if(path==='/checkout'&&req.method==='POST')return await checkout(req);
     const {db,auth}=services();
     if(path==='/bootstrap'&&req.method==='GET'){
-      const [content,products,posts,polls]=await Promise.all([db.doc('content/published').get(),db.collection('products').where('active','==',true).get(),db.collection('posts').where('status','==','published').limit(100).get(),db.collection('polls').where('active','==',true).limit(1).get()]);
-      return json({content:content.exists?content.data().sections:null,products:products.docs.map(d=>({id:d.id,...d.data()})).filter(isSellableProduct).map(presentProduct),posts:posts.docs.map(d=>({id:d.id,...d.data()})),poll:polls.docs[0]?{id:polls.docs[0].id,...polls.docs[0].data()}:null});
+      const [content,products,posts,polls,settings]=await Promise.all([db.doc('content/published').get(),db.collection('products').where('active','==',true).get(),db.collection('posts').where('status','==','published').limit(100).get(),db.collection('polls').where('active','==',true).limit(1).get(),db.doc('settings/shop').get()]);
+      return json({shippingFeeSatang:shippingFeeSatang(settings.data()),content:content.exists?content.data().sections:null,products:products.docs.map(d=>({id:d.id,...d.data()})).filter(isSellableProduct).map(presentProduct),posts:posts.docs.map(d=>({id:d.id,...d.data()})),poll:polls.docs[0]?{id:polls.docs[0].id,...polls.docs[0].data()}:null});
     }
     const orderMatch=path.match(/^\/orders\/([\w-]+)$/);
     if(orderMatch&&req.method==='GET'){
@@ -114,7 +115,7 @@ export default async function handler(req){
     if(!path.startsWith('/admin/'))throw new HttpError(404,'ไม่พบรายการ');const u=await admin(req);
     if(path==='/admin/data'&&req.method==='GET'){
       const [draft,products,orders,posts,comments,settings]=await Promise.all([db.doc('content/draft').get(),db.collection('products').get(),db.collection('orders').orderBy('createdAt','desc').limit(100).get(),db.collection('posts').limit(200).get(),db.collection('comments').where('status','==','pending').limit(100).get(),db.doc('settings/shop').get()]);
-      return json({draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})).map(presentProduct),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:settings.data()||{shippingFeeSatang:null}});
+      return json({draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})).map(presentProduct),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:{...settings.data(),shippingFeeSatang:shippingFeeSatang(settings.data()),shippingPolicyVersion:SHIPPING_POLICY_VERSION}});
     }
     if(path==='/admin/content'&&req.method==='POST'){
       const b=await body(req),sections=safeContent(b.sections);const record={sections,updatedBy:u.uid,updatedAt:new Date().toISOString()};const batch=db.batch();batch.set(db.doc('content/draft'),record);if(b.publish===true)batch.set(db.doc('content/published'),record);await batch.commit();return json({success:true});
@@ -126,7 +127,7 @@ export default async function handler(req){
     if(path==='/admin/import-bienvica'&&req.method==='POST'){
       return json({success:true,...await importBienvicaCatalog(db,u.uid)});
     }
-    if(path==='/admin/settings'&&req.method==='POST'){const b=await body(req);requireValue(Number.isSafeInteger(b.shippingFeeSatang)&&b.shippingFeeSatang>=0);await db.doc('settings/shop').set({shippingFeeSatang:b.shippingFeeSatang});return json({success:true});}
+    if(path==='/admin/settings'&&req.method==='POST'){const b=await body(req);requireValue(Number.isSafeInteger(b.shippingFeeSatang)&&b.shippingFeeSatang>=0);await db.doc('settings/shop').set({shippingFeeSatang:b.shippingFeeSatang,shippingPolicyVersion:SHIPPING_POLICY_VERSION},{merge:true});return json({success:true});}
     if(path==='/admin/shipping'&&req.method==='POST'){
       const b=await body(req),ref=db.doc('orders/'+docId(b.id));requireValue(['unfulfilled','processing','shipped','delivered'].includes(b.fulfillmentStatus));const tracking=text(b.tracking||'',100,false),carrier=text(b.carrier||'',100,false);if(['shipped','delivered'].includes(b.fulfillmentStatus))requireValue(tracking&&carrier,'กรุณาระบุขนส่งและเลขพัสดุ');await db.runTransaction(async t=>{const o=(await t.get(ref)).data();requireValue(o?.paymentStatus==='paid','คำสั่งซื้อยังไม่ชำระเงิน');t.update(ref,{fulfillmentStatus:b.fulfillmentStatus,tracking,carrier});});return json({success:true});
     }

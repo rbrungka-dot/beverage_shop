@@ -33,3 +33,5 @@ footer{padding:35px 4.5%;background:var(--cream);font-size:12px;line-height:1.9}
 /* Award mark replaces documentary photograph; transparent artwork sits on sage. */
 .award-mark{display:flex;align-items:center;justify-content:center;min-width:0}.award-mark img{display:block;width:100%;max-width:470px;height:auto;object-fit:contain}.award-copy .award-values{font-size:12px;letter-spacing:.5px;border-top:1px solid #cbd2bd;padding-top:22px;margin-top:25px;color:#6b735d}.award-year{font-variant-numeric:lining-nums tabular-nums}
 @media(max-width:700px){.award-mark img{max-width:330px}.about-award{gap:30px}.award-copy .award-values{font-size:11px}}
+
+.order-total{border-top:1px solid var(--line);padding-top:16px;margin-top:12px;font-size:18px}
