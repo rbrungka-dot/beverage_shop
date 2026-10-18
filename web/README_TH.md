@@ -143,3 +143,24 @@ Import repository `rbrungka-dot/beverage_shop` เลือก branch ที่�
 Current shipping is 50 THB per order, regardless of quantity or sellable unit. The shared shipping policy supplies the same rate to the public bootstrap, cart/checkout display and server-side quote. Unconfirmed legacy settings use the newly approved 50 THB rate. Later authenticated admin changes save the current policy version and take effect on new orders. Existing orders retain their recorded amounts. Only public fee information is exposed, never Stripe keys. Payment remains disabled until Stripe is connected and verified.
 
 Validation: 18 tests pass, including legacy-rate migration and one shipping fee across mixed products/quantities. Browser verified three single bottles: 720 THB subtotal + 50 THB shipping = 770 THB in cart and checkout. No checkout order or payment was submitted.
+
+## อีเมลแจ้งร้านเมื่อชำระเงินจริงสำเร็จ (18 October 2026)
+
+แจ้งร้านไปที่ **thanakrittum@gmail.com** เฉพาะออเดอร์ใหม่ที่ Stripe ยืนยันชำระเงินจริงสำเร็จ ไม่ส่งให้ลูกค้าหรือออเดอร์ Sandbox และไม่ส่งย้อนหลังจากออเดอร์เก่าก่อนติดตั้งฟีเจอร์นี้ ผู้รับเป็นค่าฝั่ง server ใน shared/order-email.mjs แก้จาก browser ไม่ได้ อีเมลมีเลขออเดอร์ เวลาไทย สินค้า ยอด ค่าส่ง ข้อมูลติดต่อ/ที่อยู่ และลิงก์หลังบ้านที่ต้องเข้าสู่ระบบ ตัวเลขใช้ 0–9
+
+### เปิดใช้งาน
+
+1. สร้างบัญชี https://resend.com แล้วเพิ่มโดเมนผู้ส่ง `notify.bienvica.com` ใน Domains
+2. เพิ่ม DNS สำหรับส่งอีเมลตามค่าที่ Resend แสดงใน Canva แล้วรอ Verified อย่าเปลี่ยน A/CNAME ของเว็บหรือ MX ของกล่องจดหมายเดิม ไม่ต้องเปิด receiving
+3. สร้าง Resend API key แบบ Sending access จำกัดโดเมนนี้ แล้วบันทึกใน Netlify เป็น `RESEND_API_KEY` (ห้ามส่งในแชต/commit)
+4. ตั้ง `ORDER_EMAIL_FROM` เป็น `Bienvica <orders@notify.bienvica.com>` ใน Netlify ใช้ All scopes แล้ว Deploy ใหม่ ห้ามใช้ prefix VITE_/PUBLIC_ กับคีย์
+5. เข้าหลังบ้าน → คำสั่งซื้อและจัดส่ง → อีเมลแจ้งออเดอร์ → ส่งอีเมลทดสอบ ตรวจกล่องจดหมายและสแปมที่ thanakrittum@gmail.com
+6. ตรวจใน Resend และตรวจออเดอร์ชำระจริงรายการถัดไป ไม่ใช้บัตรจริงเพื่อจำลองทดสอบ Stripe
+
+### ความน่าเชื่อถือและข้อจำกัด
+
+คิว orderNotifications/{orderId} สร้างใน Firestore transaction เดียวกับการเปลี่ยนเป็น paid จาก Stripe เท่านั้น การส่งล้มเหลวไม่ย้อนสถานะชำระเงิน Webhook ลองส่งทันที; scheduled function order-email-retry ลองใหม่ทุก 15 นาทีแม้ปิด CHECKOUT_ENABLED สถานะในหลังบ้านแยก pending/sending/sent/review; sent หมายถึง Resend รับคำขอ ไม่ใช่ยืนยันเข้ากล่องจดหมาย Firebase Rules เดิมปิด client access ต่อคิวนี้ ผู้ดูแลเห็นเฉพาะสถานะผ่าน authenticated API
+
+Transaction lease ป้องกันส่งพร้อมกัน; Resend Idempotency-Key และ payload คงเดิมป้องกันส่งซ้ำหลัง timeout ภายในหน้าต่าง 24 ชั่วโมง ถ้าไม่ทราบผลเกิน 23 ชั่วโมงจะหยุดและขึ้น review ให้ตรวจประวัติใน Resend ก่อนจัดการด้วยมือ ไม่ส่งซ้ำอัตโนมัติหลัง idempotency หมดอายุ ตรวจคิวที่ถึงเวลาส่งสูงสุด 3 รายการต่อรอบ โดยแยกจาก reconciliation เพื่อจำกัดเวลาทำงาน ต้องติดตาม backlog หากยอดขายสูง ไม่มีการส่งอีเมลจริงระหว่าง automated tests; mock tests ไม่แทนการตรวจ DNS/คีย์/กล่องจดหมายจริง
+
+ออเดอร์ทดสอบเดิมก่อนอัปเกรดไม่มี stripeLivemode และไม่ถูกส่งอีเมลย้อนหลัง ฟีเจอร์นี้ต้องตั้ง Resend และทดสอบส่งจริงก่อนใช้งาน อีเมลยืนยันลูกค้าและแจ้งพัสดุยังไม่อยู่ในขอบเขต

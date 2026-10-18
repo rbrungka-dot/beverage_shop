@@ -1,3 +1,4 @@
+import { emailConfiguration, paidOrderNotification, deliverOrderEmail, flushOrderEmails, sendEmail } from '../../shared/order-email.mjs';
 import { shippingFeeSatang, SHIPPING_POLICY_VERSION } from '../../shared/shipping.mjs';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
@@ -56,12 +57,21 @@ async function applySession(session,type,eventId){
   await db.runTransaction(async t=>{
     const [seen,snapshot]=await t.getAll(eventRef,orderRef);if(seen.exists)return;if(!snapshot.exists)throw new Error('Order not found');const o=snapshot.data();if(o.stripeSessionId&&o.stripeSessionId!==session.id)throw new Error('Session mismatch');const action=paymentAction(o,session,type);
     if(action==='release'){const docs=await t.getAll(...o.lines.map(l=>db.doc('products/'+l.productId)));docs.forEach((d,i)=>{if(!d.exists)throw new Error('Product missing');t.update(d.ref,{stock:d.data().stock+o.lines[i].quantity})});t.update(orderRef,{paymentStatus:type.endsWith('expired')?'expired':'failed',reservation:'released'});}
-    if(action==='paid')t.update(orderRef,{paymentStatus:'paid',reservation:'consumed',paidAt:new Date().toISOString(),stripeSessionId:session.id});
+    if(action==='paid'){
+      const paid={...o,paymentStatus:'paid',reservation:'consumed',paidAt:new Date().toISOString(),stripeSessionId:session.id};
+      t.update(orderRef,{paymentStatus:paid.paymentStatus,reservation:paid.reservation,paidAt:paid.paidAt,stripeSessionId:session.id,stripeLivemode:session.livemode===true});
+      const notification=paidOrderNotification(paid,session);
+      if(notification)t.create(db.doc('orderNotifications/'+id),notification);
+    }
     t.create(eventRef,{orderId:id,type,action,createdAt:FieldValue.serverTimestamp()});
   });
+  // The order is already paid even if the email service is temporarily unavailable.
+  if(session.livemode===true){try{await deliverOrderEmail(db,id);}catch{console.error('Order notification deferred');}}
 }
 
 // Recover dropped webhooks / interrupted checkout creation. Never treat the browser as proof of payment.
+export async function retryOrderNotifications(){await flushOrderEmails(services().db);}
+
 export async function reconcilePending(){
   if(process.env.CHECKOUT_ENABLED!=='true')return;
   const {db}=services(),stripe=stripeClient();const pending=await db.collection('orders').where('paymentStatus','==','pending').limit(100).get();
@@ -115,7 +125,18 @@ export default async function handler(req){
     if(!path.startsWith('/admin/'))throw new HttpError(404,'ไม่พบรายการ');const u=await admin(req);
     if(path==='/admin/data'&&req.method==='GET'){
       const [draft,products,orders,posts,comments,settings]=await Promise.all([db.doc('content/draft').get(),db.collection('products').get(),db.collection('orders').orderBy('createdAt','desc').limit(100).get(),db.collection('posts').limit(200).get(),db.collection('comments').where('status','==','pending').limit(100).get(),db.doc('settings/shop').get()]);
-      return json({draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})).map(presentProduct),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:{...settings.data(),shippingFeeSatang:shippingFeeSatang(settings.data()),shippingPolicyVersion:SHIPPING_POLICY_VERSION}});
+      const notificationDocs=await db.collection('orderNotifications').orderBy('createdAt','desc').limit(100).get();
+      const notifications=notificationDocs.docs.map(d=>({orderId:d.id,status:d.data().status,lastError:d.data().lastError||null,sentAt:d.data().sentAt||null}));
+      const email=emailConfiguration();
+      return json({notifications,email:{ready:email.ready,to:email.to,from:email.from},draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})).map(presentProduct),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:{...settings.data(),shippingFeeSatang:shippingFeeSatang(settings.data()),shippingPolicyVersion:SHIPPING_POLICY_VERSION}});
+    }
+    if(path==='/admin/notification-test'&&req.method==='POST'){
+      await rateLimit(db,'email-test:'+u.uid,2);const b=await body(req),requestId=docId(b.requestId);
+      const config=emailConfiguration();if(!config.ready)throw new HttpError(503,'กรุณาตั้ง RESEND_API_KEY และ ORDER_EMAIL_FROM ใน Netlify');
+      try{
+        await sendEmail({from:config.from,to:config.to,subject:'ทดสอบอีเมลแจ้งออเดอร์ Bienvica',text:'ระบบส่งอีเมลแจ้งร้านเชื่อมต่อแล้ว อีเมลนี้เป็นการทดสอบ ไม่มีคำสั่งซื้อและไม่มีการเรียกเก็บเงิน\nเปิดหลังบ้าน: https://bienvica.com/#/admin/orders'},'bienvica-email-test/'+requestId);
+      }catch{throw new HttpError(502,'บริการส่งอีเมลไม่รับคำขอ กรุณาตรวจคีย์และโดเมนผู้ส่งใน Resend');}
+      return json({success:true});
     }
     if(path==='/admin/content'&&req.method==='POST'){
       const b=await body(req),sections=safeContent(b.sections);const record={sections,updatedBy:u.uid,updatedAt:new Date().toISOString()};const batch=db.batch();batch.set(db.doc('content/draft'),record);if(b.publish===true)batch.set(db.doc('content/published'),record);await batch.commit();return json({success:true});
