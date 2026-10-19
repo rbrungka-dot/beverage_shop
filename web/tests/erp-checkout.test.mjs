@@ -1,8 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
+import {SHIPPING_POLICY_VERSION} from '../shared/shipping.mjs';
 import {checkout,applySession} from '../netlify/functions/api.mjs';
 function database(){
- const rows=new Map([['products/drink',{name:'Drink',brand:'Bienvica',active:true,stock:100,priceSatang:24000,erpSku:'ONE'}],['settings/shop',{shippingFeeSatang:6000}]]);
+ const rows=new Map([['products/drink',{name:'Drink',brand:'Bienvica',active:true,stock:100,priceSatang:24000,erpSku:'ONE'}],['settings/shop',{shippingFeeSatang:6000,shippingPolicyVersion:SHIPPING_POLICY_VERSION}]]);
  const doc=path=>({path,id:path.split('/').at(-1),get:async()=>snapshot(path),update:async value=>rows.set(path,{...rows.get(path),...value})});
  const snapshot=path=>({exists:rows.has(path),id:path.split('/').at(-1),ref:doc(path),data:()=>structuredClone(rows.get(path))});
  return {rows,doc,runTransaction:async fn=>{let writing=false;const pending=[];const get=async ref=>{assert.equal(writing,false,'reads before writes');return snapshot(ref.path);};const result=await fn({get,getAll:async(...refs)=>Promise.all(refs.map(get)),set:(ref,value)=>{writing=true;pending.push([ref.path,value,false]);},update:(ref,value)=>{writing=true;pending.push([ref.path,value,true]);},create:(ref,value)=>{assert.equal(rows.has(ref.path),false);writing=true;pending.push([ref.path,value,false]);}});for(const [path,value,merge]of pending)rows.set(path,merge?{...rows.get(path),...structuredClone(value)}:structuredClone(value));return result;}};
