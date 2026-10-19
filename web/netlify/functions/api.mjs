@@ -1,3 +1,4 @@
+import {erpEnabled,erpConfiguration,erpRequest,mappedLines,syncERPOrder,flushERPOrders,withERPStock} from '../../shared/erp-client.mjs';
 import { emailConfiguration, paidOrderNotification, deliverOrderEmail, flushOrderEmails, sendEmail } from '../../shared/order-email.mjs';
 import { shippingFeeSatang, SHIPPING_POLICY_VERSION } from '../../shared/shipping.mjs';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
@@ -24,19 +25,23 @@ function publicOrder(o){return{id:o.id,paymentStatus:o.paymentStatus,fulfillment
 async function rateLimit(db,key,max=8){const ref=db.doc('limits/'+fingerprint(key));const minute=Math.floor(Date.now()/60000);await db.runTransaction(async t=>{const d=(await t.get(ref)).data();const n=d?.minute===minute?d.count:0;if(n>=max)throw new HttpError(429,'ลองอีกครั้งในอีกสักครู่');t.set(ref,{minute,count:n+1,expiresAt:new Date(Date.now()+3600000)});});}
 function safeContent(input){const ids=['hero','story','bienvica','btime','xact'];const output={};for(const id of ids){const s=input?.[id];requireValue(s);const image=text(s.image||'',2000,false);requireValue(!image||image.startsWith('/assets/')||/^https:\/\/firebasestorage\.googleapis\.com\//.test(image),'รูปภาพต้องมาจากคลังของเว็บไซต์');output[id]={title:text(s.title,300),body:text(s.body,4000),button:text(s.button||'',100,false),image};}return output;}
 
-async function checkout(req){
+export async function checkout(req,options={}){
   if(process.env.CHECKOUT_ENABLED!=='true')throw new HttpError(503,'ยังไม่เปิดรับชำระเงิน กรุณาติดต่อทีม');
-  const {db}=services();const stripe=stripeClient();const origin=new URL(process.env.SITE_URL||'').origin;
+  const {db=services().db,stripe=stripeClient(),getIdentity=identity,limit=rateLimit,sync=syncERPOrder}=options;
+  const origin=new URL(process.env.SITE_URL||'').origin;
   requireValue(origin.startsWith('https://')||origin==='http://localhost:8888','ต้องตั้ง SITE_URL');
-  const data=validateCheckout(await body(req)),user=await identity(req);const token=orderToken(data.checkoutId,process.env.ORDER_TOKEN_SECRET);
-  await rateLimit(db,'checkout:'+(req.headers.get('x-nf-client-connection-ip')||req.headers.get('x-forwarded-for')||'unknown'),12);
+  const integration=erpEnabled();if(integration&&!process.env.STRIPE_SECRET_KEY.startsWith('sk_live_'))throw new HttpError(503,'ส่วนเชื่อม ERP จริงใช้ได้กับการขายจริงเท่านั้น');
+  const data=validateCheckout(await body(req)),user=await getIdentity(req);const token=orderToken(data.checkoutId,process.env.ORDER_TOKEN_SECRET);
+  await limit(db,'checkout:'+(req.headers.get('x-nf-client-connection-ip')||req.headers.get('x-forwarded-for')||'unknown'),12);
   const orderRef=db.doc('orders/'+data.checkoutId),hash=fingerprint({items:data.items,shipping:data.shipping,uid:user?.uid||null});
   let order=await db.runTransaction(async t=>{
-    const old=await t.get(orderRef);if(old.exists){const o=old.data();if(o.fingerprint!==hash)throw new HttpError(409,'คำขอสั่งซื้อเปลี่ยนไป กรุณาเริ่มใหม่');if(o.reservation!=='held'||o.paymentStatus!=='pending')throw new HttpError(409,'คำสั่งซื้อนี้ปิดแล้ว');return o;}
-    const settings=(await t.get(db.doc('settings/shop'))).data();const refs=data.items.map(i=>db.doc('products/'+i.productId));const docs=await t.getAll(...refs);const quote=quoteProducts(data.items,docs.map(d=>({id:d.id,...d.data()})),shippingFeeSatang(settings));
-    const o={id:data.checkoutId,uid:user?.uid||null,fingerprint:hash,...quote,shipping:data.shipping,paymentStatus:'pending',fulfillmentStatus:'unfulfilled',reservation:'held',checkoutExpiresAt:Math.floor(Date.now()/1000)+3600,createdAt:new Date().toISOString()};
-    docs.forEach((d,i)=>t.update(d.ref,{stock:d.data().stock-data.items[i].quantity}));t.create(orderRef,o);return o;
+    const old=await t.get(orderRef);if(old.exists){const o=old.data();if(o.fingerprint!==hash)throw new HttpError(409,'คำขอสั่งซื้อเปลี่ยนไป กรุณาเริ่มใหม่');if(!['held','preparing'].includes(o.reservation)||o.paymentStatus!=='pending')throw new HttpError(409,'คำสั่งซื้อนี้ปิดแล้ว');return o;}
+    const settings=(await t.get(db.doc('settings/shop'))).data();const refs=data.items.map(i=>db.doc('products/'+i.productId));const docs=await t.getAll(...refs);const quote=quoteProducts(data.items,docs.map(d=>({id:d.id,...d.data(),...(integration?{stock:99}:{})})),shippingFeeSatang(settings));
+    if(integration){quote.lines=quote.lines.map(l=>({...l,erpSku:docs.find(d=>d.id===l.productId)?.data()?.erpSku||''}));mappedLines(quote);}
+    const o={...(integration?{erp:{required:true,sync:'pending'}}:{}),id:data.checkoutId,uid:user?.uid||null,fingerprint:hash,...quote,shipping:data.shipping,paymentStatus:'pending',fulfillmentStatus:'unfulfilled',reservation:integration?'preparing':'held',checkoutExpiresAt:Math.floor(Date.now()/1000)+3600,createdAt:new Date().toISOString()};
+    if(!integration)docs.forEach((d,i)=>t.update(d.ref,{stock:d.data().stock-data.items[i].quantity}));t.create(orderRef,o);return o;
   });
+  if(order.erp?.required&&order.erp.sync!=='reserved'){await sync(db,order.id);order=(await orderRef.get()).data();}
   if(order.stripeSessionId){const session=await stripe.checkout.sessions.retrieve(order.stripeSessionId);if(session.status==='open'&&session.url)return json({url:session.url,orderId:order.id,token});throw new HttpError(409,'คำสั่งซื้อกำลังตรวจสอบหรือหมดเวลา กรุณาดูสถานะคำสั่งซื้อ');}
   const line_items=order.lines.map(l=>({price_data:{currency:'thb',unit_amount:l.priceSatang,product_data:{name:l.name}},quantity:l.quantity}));
   if(order.shippingFee>0)line_items.push({price_data:{currency:'thb',unit_amount:order.shippingFee,product_data:{name:'ค่าจัดส่ง'}},quantity:1});
@@ -52,29 +57,31 @@ async function webhook(req){
   await applySession(event.data.object,event.type,event.id);return json({received:true});
 }
 
-async function applySession(session,type,eventId){
-  const {db}=services(),id=docId(session.metadata?.orderId),orderRef=db.doc('orders/'+id),eventRef=db.doc('stripeEvents/'+eventId);
+export async function applySession(session,type,eventId,{db=services().db,sync=syncERPOrder,email=deliverOrderEmail}={}){
+  const id=docId(session.metadata?.orderId),orderRef=db.doc('orders/'+id),eventRef=db.doc('stripeEvents/'+eventId);
   await db.runTransaction(async t=>{
     const [seen,snapshot]=await t.getAll(eventRef,orderRef);if(seen.exists)return;if(!snapshot.exists)throw new Error('Order not found');const o=snapshot.data();if(o.stripeSessionId&&o.stripeSessionId!==session.id)throw new Error('Session mismatch');const action=paymentAction(o,session,type);
-    if(action==='release'){const docs=await t.getAll(...o.lines.map(l=>db.doc('products/'+l.productId)));docs.forEach((d,i)=>{if(!d.exists)throw new Error('Product missing');t.update(d.ref,{stock:d.data().stock+o.lines[i].quantity})});t.update(orderRef,{paymentStatus:type.endsWith('expired')?'expired':'failed',reservation:'released'});}
+    if(action==='release'){if(!o.erp?.required){const docs=await t.getAll(...o.lines.map(l=>db.doc('products/'+l.productId)));docs.forEach((d,i)=>{if(!d.exists)throw new Error('Product missing');t.update(d.ref,{stock:d.data().stock+o.lines[i].quantity})});}t.update(orderRef,{paymentStatus:type.endsWith('expired')?'expired':'failed',reservation:'released',...(o.erp?.required?{erp:{...o.erp,sync:'pending',action:'cancel'}}:{})});}
     if(action==='paid'){
       const paid={...o,paymentStatus:'paid',reservation:'consumed',paidAt:new Date().toISOString(),stripeSessionId:session.id};
-      t.update(orderRef,{paymentStatus:paid.paymentStatus,reservation:paid.reservation,paidAt:paid.paidAt,stripeSessionId:session.id,stripeLivemode:session.livemode===true});
+      t.update(orderRef,{paymentStatus:paid.paymentStatus,reservation:paid.reservation,paidAt:paid.paidAt,stripeSessionId:session.id,stripeLivemode:session.livemode===true,...(o.erp?.required?{erp:{...o.erp,sync:'pending',action:'paid'}}:{})});
       const notification=paidOrderNotification(paid,session);
       if(notification)t.create(db.doc('orderNotifications/'+id),notification);
     }
     t.create(eventRef,{orderId:id,type,action,createdAt:FieldValue.serverTimestamp()});
   });
+  try{await sync(db,id);}catch{console.error('ERP sync pending; order is retained');}
   // The order is already paid even if the email service is temporarily unavailable.
-  if(session.livemode===true){try{await deliverOrderEmail(db,id);}catch{console.error('Order notification deferred');}}
+  if(session.livemode===true){try{await email(db,id);}catch{console.error('Order notification deferred');}}
 }
 
 // Recover dropped webhooks / interrupted checkout creation. Never treat the browser as proof of payment.
 export async function retryOrderNotifications(){await flushOrderEmails(services().db);}
 
 export async function reconcilePending(){
-  if(process.env.CHECKOUT_ENABLED!=='true')return;
-  const {db}=services(),stripe=stripeClient();const pending=await db.collection('orders').where('paymentStatus','==','pending').limit(100).get();
+  const {db}=services();await flushERPOrders(db);
+  if(!process.env.STRIPE_SECRET_KEY)return;
+  const stripe=stripeClient();const pending=await db.collection('orders').where('paymentStatus','==','pending').limit(100).get();
   for(const snap of pending.docs){
     const order=snap.data();let session;
     if(order.stripeSessionId)session=await stripe.checkout.sessions.retrieve(order.stripeSessionId);
@@ -102,7 +109,7 @@ export default async function handler(req){
     const {db,auth}=services();
     if(path==='/bootstrap'&&req.method==='GET'){
       const [content,products,posts,polls,settings]=await Promise.all([db.doc('content/published').get(),db.collection('products').where('active','==',true).get(),db.collection('posts').where('status','==','published').limit(100).get(),db.collection('polls').where('active','==',true).limit(1).get(),db.doc('settings/shop').get()]);
-      return json({shippingFeeSatang:shippingFeeSatang(settings.data()),content:content.exists?content.data().sections:null,products:products.docs.map(d=>({id:d.id,...d.data()})).filter(isSellableProduct).map(presentProduct),posts:posts.docs.map(d=>({id:d.id,...d.data()})),poll:polls.docs[0]?{id:polls.docs[0].id,...polls.docs[0].data()}:null});
+      return json({shippingFeeSatang:shippingFeeSatang(settings.data()),content:content.exists?content.data().sections:null,products:await withERPStock(products.docs.map(d=>({id:d.id,...d.data()})).filter(isSellableProduct).map(presentProduct)),posts:posts.docs.map(d=>({id:d.id,...d.data()})),poll:polls.docs[0]?{id:polls.docs[0].id,...polls.docs[0].data()}:null});
     }
     const orderMatch=path.match(/^\/orders\/([\w-]+)$/);
     if(orderMatch&&req.method==='GET'){
@@ -128,8 +135,10 @@ export default async function handler(req){
       const notificationDocs=await db.collection('orderNotifications').orderBy('createdAt','desc').limit(100).get();
       const notifications=notificationDocs.docs.map(d=>({orderId:d.id,status:d.data().status,lastError:d.data().lastError||null,sentAt:d.data().sentAt||null}));
       const email=emailConfiguration();
-      return json({notifications,email:{ready:email.ready,to:email.to,from:email.from},draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})).map(presentProduct),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:{...settings.data(),shippingFeeSatang:shippingFeeSatang(settings.data()),shippingPolicyVersion:SHIPPING_POLICY_VERSION}});
+      return json({erp:erpConfiguration(),notifications,email:{ready:email.ready,to:email.to,from:email.from},draft:draft.data()?.sections||null,products:products.docs.map(d=>({id:d.id,...d.data()})).map(presentProduct),orders:orders.docs.map(d=>d.data()),posts:posts.docs.map(d=>({id:d.id,...d.data()})),comments:comments.docs.map(d=>({id:d.id,...d.data()})),settings:{...settings.data(),shippingFeeSatang:shippingFeeSatang(settings.data()),shippingPolicyVersion:SHIPPING_POLICY_VERSION}});
     }
+    if(path==='/admin/erp'&&req.method==='GET'){return json({...erpConfiguration(),...await erpRequest('catalog')});}
+    if(path==='/admin/erp-retry'&&req.method==='POST'){await rateLimit(db,'erp-retry:'+u.uid,4);const b=await body(req);return json(await syncERPOrder(db,docId(b.id))||{success:true});}
     if(path==='/admin/notification-test'&&req.method==='POST'){
       await rateLimit(db,'email-test:'+u.uid,2);const b=await body(req),requestId=docId(b.requestId);
       const config=emailConfiguration();if(!config.ready)throw new HttpError(503,'กรุณาตั้ง RESEND_API_KEY และ ORDER_EMAIL_FROM ใน Netlify');
@@ -143,14 +152,15 @@ export default async function handler(req){
     }
     if(path==='/admin/product'&&req.method==='POST'){
       const b=await body(req);requireValue(!discontinuedProductIds.includes(b.id)||b.active!==true,'สินค้านี้เลิกจำหน่ายแล้ว');requireValue(['Bienvica','B-time','Xactu-X'].includes(b.brand));requireValue(b.priceSatang===null||Number.isSafeInteger(b.priceSatang)&&b.priceSatang>0);requireValue(b.stock===null||Number.isSafeInteger(b.stock)&&b.stock>=0);const image=text(b.image||'',2000,false);requireValue(!image||image.startsWith('/assets/')||/^https:\/\/firebasestorage\.googleapis\.com\//.test(image));
-      const data={name:text(b.name,200),brand:b.brand,description:text(b.description||'',4000,false),instructions:text(b.instructions||'',2000,false),priceSatang:b.priceSatang,stock:b.stock,active:b.active===true,image};await db.doc('products/'+docId(b.id||randomUUID())).set(data,{merge:true});return json({success:true});
+      const erpSku=text(b.erpSku||'',100,false).toUpperCase();requireValue(!erpSku||/^[A-Z0-9_-]+$/.test(erpSku),'รหัส SKU ไม่ถูกต้อง');
+      const data={erpSku,name:text(b.name,200),brand:b.brand,description:text(b.description||'',4000,false),instructions:text(b.instructions||'',2000,false),priceSatang:b.priceSatang,stock:b.stock,active:b.active===true,image};await db.doc('products/'+docId(b.id||randomUUID())).set(data,{merge:true});return json({success:true});
     }
     if(path==='/admin/import-bienvica'&&req.method==='POST'){
       return json({success:true,...await importBienvicaCatalog(db,u.uid)});
     }
     if(path==='/admin/settings'&&req.method==='POST'){const b=await body(req);requireValue(Number.isSafeInteger(b.shippingFeeSatang)&&b.shippingFeeSatang>=0);await db.doc('settings/shop').set({shippingFeeSatang:b.shippingFeeSatang,shippingPolicyVersion:SHIPPING_POLICY_VERSION},{merge:true});return json({success:true});}
     if(path==='/admin/shipping'&&req.method==='POST'){
-      const b=await body(req),ref=db.doc('orders/'+docId(b.id));requireValue(['unfulfilled','processing','shipped','delivered'].includes(b.fulfillmentStatus));const tracking=text(b.tracking||'',100,false),carrier=text(b.carrier||'',100,false);if(['shipped','delivered'].includes(b.fulfillmentStatus))requireValue(tracking&&carrier,'กรุณาระบุขนส่งและเลขพัสดุ');await db.runTransaction(async t=>{const o=(await t.get(ref)).data();requireValue(o?.paymentStatus==='paid','คำสั่งซื้อยังไม่ชำระเงิน');t.update(ref,{fulfillmentStatus:b.fulfillmentStatus,tracking,carrier});});return json({success:true});
+      const b=await body(req),ref=db.doc('orders/'+docId(b.id));requireValue(['unfulfilled','processing','shipped','delivered'].includes(b.fulfillmentStatus));const tracking=text(b.tracking||'',100,false),carrier=text(b.carrier||'',100,false);if(['shipped','delivered'].includes(b.fulfillmentStatus))requireValue(tracking&&carrier,'กรุณาระบุขนส่งและเลขพัสดุ');await db.runTransaction(async t=>{const o=(await t.get(ref)).data();requireValue(o?.paymentStatus==='paid','คำสั่งซื้อยังไม่ชำระเงิน');requireValue(!o.erp?.required||o.erp.sync==='done'&&o.erp.action==='paid','รอเชื่อม ERP สำเร็จก่อนจัดส่ง');t.update(ref,{fulfillmentStatus:b.fulfillmentStatus,tracking,carrier});});return json({success:true});
     }
     if(path==='/admin/moderate'&&req.method==='POST'){
       const b=await body(req);requireValue(['posts','comments'].includes(b.collection)&&['published','rejected'].includes(b.status));const ref=db.doc(b.collection+'/'+docId(b.id)),snap=await ref.get();if(!snap.exists)throw new HttpError(404,'ไม่พบโพสต์');let image=snap.data().image||'';

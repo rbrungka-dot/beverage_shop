@@ -164,3 +164,17 @@ Validation: 18 tests pass, including legacy-rate migration and one shipping fee 
 Transaction lease ป้องกันส่งพร้อมกัน; Resend Idempotency-Key และ payload คงเดิมป้องกันส่งซ้ำหลัง timeout ภายในหน้าต่าง 24 ชั่วโมง ถ้าไม่ทราบผลเกิน 23 ชั่วโมงจะหยุดและขึ้น review ให้ตรวจประวัติใน Resend ก่อนจัดการด้วยมือ ไม่ส่งซ้ำอัตโนมัติหลัง idempotency หมดอายุ ตรวจคิวที่ถึงเวลาส่งสูงสุด 3 รายการต่อรอบ โดยแยกจาก reconciliation เพื่อจำกัดเวลาทำงาน ต้องติดตาม backlog หากยอดขายสูง ไม่มีการส่งอีเมลจริงระหว่าง automated tests; mock tests ไม่แทนการตรวจ DNS/คีย์/กล่องจดหมายจริง
 
 ออเดอร์ทดสอบเดิมก่อนอัปเกรดไม่มี stripeLivemode และไม่ถูกส่งอีเมลย้อนหลัง ฟีเจอร์นี้ต้องตั้ง Resend และทดสอบส่งจริงก่อนใช้งาน อีเมลยืนยันลูกค้าและแจ้งพัสดุยังไม่อยู่ในขอบเขต
+
+## เชื่อม BEV-PRO ERP (38.2.17)
+
+ERP เป็นฐานยอดพร้อมขาย แยกจากสต็อกชั่วคราวของเว็บ ตั้ง ERP_BRIDGE_URL, ERP_BRIDGE_SECRET เฉพาะ Netlify Functions และ ERP_INTEGRATION_ENABLED=false ระหว่างเตรียม ห้ามใส่ secret ใน config.js / src หรือ GitHub
+
+ฝั่ง ERP ต้องตั้ง ERP_FIREBASE_SERVICE_ACCOUNT_JSON ของ bev-production-system, ERP_BRIDGE_SECRET ค่าเดียวกัน และ ERP_BRIDGE_ENABLED=true หลัง Publish Rules/รีเฟรชทุกเครื่อง/ตรวจสต็อกจริง ดูคู่มือฉบับเต็ม: https://github.com/rbrungka-dot/bev-pro-erp/blob/main/COMMERCE_SETUP_TH.md
+
+หลังบ้านสินค้าเพิ่มช่อง SKU ใน ERP ให้จับคู่ครั้งเดียว ทั้งองค์ประกอบและราคาต้องตรง เช่นขวดเดี่ยวและแพ็ค 12 ใช้คนละ SKU ปุ่มตรวจการเชื่อมแสดงรหัส ราคา และจำนวนว่าง จากนั้นเปิด ERP_INTEGRATION_ENABLED=true และ redeploy ส่วน CHECKOUT_ENABLED คง false จนพร้อมเปิดรับเงินจริง เว็บไม่จอง ERP โปรเจกต์จริงด้วย Stripe Sandbox
+
+Checkout สร้าง durable intent → reserve ERP → จึงสร้าง Stripe session โดยไม่ตัด stock ชั่วคราวของเว็บ การจอง ERP มี protected จน Stripe ยืนยัน paid/expired/failed ไม่หมดเองตามเครื่องลูกค้า เมื่อชำระสำเร็จ ERP ออก invoice และบันทึกยอดเต็มรวมค่าส่งเข้าบัญชี Stripe รอรับโอน ไม่ใช่ยอดเงินเข้าธนาคารหลังหักค่าธรรมเนียม
+
+Webhook บันทึก paid state และคิว ERP ใน transaction เดียว งาน reconcile และปุ่มลองใหม่ในหลังบ้าน retry แบบ idempotent ไม่ชาร์จหรือตัดคลังซ้ำ ออเดอร์ที่ ERP ยังไม่เชื่อม paid ครบจะบันทึกจัดส่งไม่ได้ ไม่ import ออเดอร์เก่าที่ไม่ได้มี erp.required และไม่เปิด checkout เอง
+
+หาก ERP/ราคา/SKU ไม่พร้อม API แสดงพร้อมขาย 0 ไม่กลับไปใช้จำนวนชั่วคราว หน้าเว็บโหลดใหม่/เข้าเมนูซื้ออ่านยอดล่าสุด และตรวจก่อนสร้างการชำระจริง ยังไม่ใช่ push แบบทันที คิวข้ามวันให้ตรวจวันรับเงินจริงจาก Stripe เทียบวันที่เอกสาร ERP ไม่มีคืนเงิน/ค่าขนส่งจริง/Stripe payout reconciliation อัตโนมัติในรุ่นนี้
